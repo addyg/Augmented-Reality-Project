@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
-    <device id="retina4_7" orientation="portrait">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="OVa-gh-xOO">
+    <device id="retina6_1" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
@@ -15,50 +15,146 @@
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="Nasty_Pumpkins" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <arscnView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="COl-MK-yw9">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                            <arscnView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ld6-ay-OVz">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                             </arscnView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zlg-Jt-Q7m">
-                                <rect key="frame" x="175.5" y="321.5" width="24" height="24"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="E9u-MC-E0a">
+                                <rect key="frame" x="195" y="436" width="24" height="24"/>
                                 <state key="normal" image="plus"/>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oqv-S0-4pZ">
-                                <rect key="frame" x="98.5" y="598" width="178" height="39"/>
-                                <fontDescription key="fontDescription" name="ArialRoundedMTBold" family="Arial Rounded MT Bold" pointSize="23"/>
-                                <state key="normal" title="Place Pumpkins">
-                                    <color key="titleColor" red="0.57756799459457397" green="0.22965091466903687" blue="0.094089873135089874" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EJc-9S-cCU">
+                                <rect key="frame" x="123.5" y="830" width="167" height="36"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
+                                <state key="normal" title="  Place Pumpkins  ">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
+                                        <real key="value" value="4"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                        <real key="value" value="2"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                                        <color key="value" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
                                 <connections>
-                                    <action selector="addTargets:" destination="BYZ-38-t0r" eventType="touchUpInside" id="OPo-wc-iXq"/>
+                                    <action selector="addTargets:" destination="BYZ-38-t0r" eventType="touchUpInside" id="2kL-CE-P1M"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="N8N-aU-uIk">
+                                <rect key="frame" x="20" y="826" width="50" height="50"/>
+                                <state key="normal" image="backArrow"/>
+                                <connections>
+                                    <action selector="backButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="lBv-QJ-7R1"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lQk-Le-ebb">
+                                <rect key="frame" x="344" y="826" width="50" height="50"/>
+                                <state key="normal" image="3D"/>
+                                <connections>
+                                    <action selector="orientation:" destination="BYZ-38-t0r" eventType="touchUpInside" id="4SK-zG-b4P"/>
+                                </connections>
+                            </button>
+                            <progressView tag="5" contentMode="scaleToFill" verticalHuggingPriority="750" ambiguous="YES" progress="0.10000000000000001" translatesAutoresizingMaskIntoConstraints="NO" id="b4B-dB-KIZ">
+                                <rect key="frame" x="52" y="84" width="315" height="2"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="tintColor" red="1" green="0.57810515169999999" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <rect key="contentStretch" x="1" y="1" width="1" height="1"/>
+                                <color key="progressTintColor" red="1" green="0.57810515169999999" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="trackTintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </progressView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="COl-MK-yw9" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="Ete-S9-0Lq"/>
-                            <constraint firstItem="zlg-Jt-Q7m" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="FFc-pF-Ko4"/>
-                            <constraint firstItem="zlg-Jt-Q7m" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="KE6-md-Zr1"/>
-                            <constraint firstItem="COl-MK-yw9" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="SJC-8H-0C1"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="oqv-S0-4pZ" secondAttribute="bottom" constant="30" id="TN1-gO-FuZ"/>
-                            <constraint firstItem="COl-MK-yw9" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="ZTr-yl-zTR"/>
-                            <constraint firstItem="COl-MK-yw9" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="cEp-pp-hqO"/>
-                            <constraint firstItem="oqv-S0-4pZ" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="emb-ke-qFN"/>
+                            <constraint firstItem="N8N-aU-uIk" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="2eB-cu-goT"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="lQk-Le-ebb" secondAttribute="trailing" constant="20" id="5bh-qR-afe"/>
+                            <constraint firstAttribute="bottom" secondItem="N8N-aU-uIk" secondAttribute="bottom" constant="20" id="8zm-Go-xq6"/>
+                            <constraint firstItem="ld6-ay-OVz" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="GL5-gs-3BU"/>
+                            <constraint firstItem="E9u-MC-E0a" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="IPu-ls-IU8"/>
+                            <constraint firstItem="b4B-dB-KIZ" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="40" id="MKj-Lf-jxU"/>
+                            <constraint firstItem="ld6-ay-OVz" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="NpP-qX-1x6"/>
+                            <constraint firstItem="ld6-ay-OVz" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="W14-48-jfr"/>
+                            <constraint firstItem="E9u-MC-E0a" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Ync-RO-O40"/>
+                            <constraint firstAttribute="bottom" secondItem="lQk-Le-ebb" secondAttribute="bottom" constant="20" id="hWT-eF-lGp"/>
+                            <constraint firstItem="EJc-9S-cCU" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="pzf-ZU-cYh"/>
+                            <constraint firstAttribute="bottom" secondItem="ld6-ay-OVz" secondAttribute="bottom" id="tQq-ly-ijM"/>
+                            <constraint firstAttribute="bottom" secondItem="EJc-9S-cCU" secondAttribute="bottom" constant="30" id="uBc-XG-gh3"/>
+                            <constraint firstItem="b4B-dB-KIZ" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="xjK-Wj-szO"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
-                        <outlet property="sceneView" destination="COl-MK-yw9" id="kl6-51-rcg"/>
+                        <outlet property="sceneView" destination="ld6-ay-OVz" id="NRE-9e-FVF"/>
+                        <outlet property="timeLeft" destination="b4B-dB-KIZ" id="nSn-Wc-dEG"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="136.80000000000001" y="132.68365817091455"/>
+            <point key="canvasLocation" x="924.63768115942037" y="154.6875"/>
+        </scene>
+        <!--Menu Page-->
+        <scene sceneID="AKD-Ef-5Jl">
+            <objects>
+                <viewController id="OVa-gh-xOO" customClass="menuPage" customModule="Nasty_Pumpkins" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="ZaJ-on-wHQ">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3Rw-0j-dLs">
+                                <rect key="frame" x="153" y="419" width="108" height="58"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="38"/>
+                                <state key="normal" title="  Play  ">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
+                                        <real key="value" value="4"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                        <real key="value" value="4"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                                        <color key="value" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="playButton:" destination="OVa-gh-xOO" eventType="touchUpInside" id="JbP-Ea-lbt"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Copyright © 2019 CSCI 561.  All rights reserved." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="csC-uu-Uxk">
+                                <rect key="frame" x="94.5" y="781" width="225" height="41"/>
+                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="17"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="0.57810515169999999" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="csC-uu-Uxk" firstAttribute="centerX" secondItem="ZaJ-on-wHQ" secondAttribute="centerX" id="Lqk-73-aUx"/>
+                            <constraint firstItem="3Rw-0j-dLs" firstAttribute="centerY" secondItem="ZaJ-on-wHQ" secondAttribute="centerY" id="PXV-pA-0vQ"/>
+                            <constraint firstItem="lvN-8Z-0B5" firstAttribute="bottom" secondItem="csC-uu-Uxk" secondAttribute="bottom" constant="40" id="Tk4-Ks-AOE"/>
+                            <constraint firstItem="csC-uu-Uxk" firstAttribute="centerX" secondItem="ZaJ-on-wHQ" secondAttribute="centerX" id="Y6F-vn-05L"/>
+                            <constraint firstItem="3Rw-0j-dLs" firstAttribute="centerX" secondItem="ZaJ-on-wHQ" secondAttribute="centerX" id="ibX-a6-q1z"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="lvN-8Z-0B5"/>
+                    </view>
+                    <connections>
+                        <segue destination="BYZ-38-t0r" kind="presentation" identifier="moveToGame" id="TJd-GZ-Xbm"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="iyc-7d-gcW" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="108.69565217391305" y="155.35714285714286"/>
         </scene>
     </scenes>
     <resources>
+        <image name="3D" width="50" height="50"/>
+        <image name="backArrow" width="50" height="50"/>
         <image name="plus" width="24" height="24"/>
     </resources>
 </document>
