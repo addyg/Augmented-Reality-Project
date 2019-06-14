@@ -13,7 +13,7 @@ class menuPage: UIViewController {
 
     @IBAction func playButton(_ sender: Any) {
         
-        performSegue(withIdentifier: "movePlaneDetection", sender: self)
+        performSegue(withIdentifier: "movetogame", sender: self)
 
     }
     

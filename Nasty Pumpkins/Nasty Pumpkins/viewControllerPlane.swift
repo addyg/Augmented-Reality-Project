@@ -56,10 +56,10 @@ class viewControllerPlane: UIViewController, ARSCNViewDelegate {
     }
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         var vc = segue.destination as! ViewController
-        vc.centroidList = self.realWorldObjectCentroidArray
-        vc.eulerList = self.realWorldObjectEulerArray
-        vc.boundaryList = self.realWorldObjectMaxBoundriesArray
-        vc.transform = self.transformcordinate
+//        vc.centroidList = self.realWorldObjectCentroidArray
+//        vc.eulerList = self.realWorldObjectEulerArray
+//        vc.boundaryList = self.realWorldObjectMaxBoundriesArray
+//        vc.transform = self.transformcordinate
     }
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touch = touches.first else { return }
@@ -120,12 +120,12 @@ class viewControllerPlane: UIViewController, ARSCNViewDelegate {
             print(self.realWorldObjectCentroidArray)
         }
         //Now proceed to show the object
-        var count = 0;
-        //Objects are scanned  scanned now. Lets Store its 3D ARCloud Model
-        for _ in self.realWorldObjectArray{
-            self.placePlaneInFrontOfObjects(index: count)
-            count += 1
-        }
+//        var count = 0;
+//        //Objects are scanned  scanned now. Lets Store its 3D ARCloud Model
+//        for _ in self.realWorldObjectArray{
+//            self.placePlaneInFrontOfObjects(index: count)
+//            count += 1
+//        }
     }
     
     //Used For Occlusion. NOt being used now
@@ -213,7 +213,7 @@ class viewControllerPlane: UIViewController, ARSCNViewDelegate {
         let objectBoundaries = self.realWorldObjectMaxBoundriesArray[index]
         
         let height = self.getHeightBasedOnOrientation(objectBoundaries: objectBoundaries,eulerAngle: self.realWorldObjectEulerArray[index])
-        let width = 2 * CGFloat(objectBoundaries.getMaxX())
+        let width = CGFloat(objectBoundaries.getMaxX())
             
         self.realWorldObjectMaxBoundriesArray[index].height = Float(height)
         self.realWorldObjectMaxBoundriesArray[index].width = Float(width)

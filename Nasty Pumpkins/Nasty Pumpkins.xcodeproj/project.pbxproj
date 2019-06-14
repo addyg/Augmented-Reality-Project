@@ -17,7 +17,6 @@
 		04279A6322AE7FBB00CA48F0 /* Media.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = 04279A6222AE7FBB00CA48F0 /* Media.scnassets */; };
 		04279A6522AE825A00CA48F0 /* menuPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04279A6422AE825A00CA48F0 /* menuPage.swift */; };
 		04279A6B22AF67D000CA48F0 /* CircularProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04279A6A22AF67D000CA48F0 /* CircularProgress.swift */; };
-		0B29602022B33A9100375D31 /* viewControllerPlane.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B29601F22B33A9100375D31 /* viewControllerPlane.swift */; };
 		0B29602222B33D2000375D31 /* ObjectBoundriesBean.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B29602122B33D2000375D31 /* ObjectBoundriesBean.swift */; };
 /* End PBXBuildFile section */
 
@@ -55,7 +54,6 @@
 		04279A6222AE7FBB00CA48F0 /* Media.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = Media.scnassets; sourceTree = "<group>"; };
 		04279A6422AE825A00CA48F0 /* menuPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = menuPage.swift; sourceTree = "<group>"; };
 		04279A6A22AF67D000CA48F0 /* CircularProgress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircularProgress.swift; sourceTree = "<group>"; };
-		0B29601F22B33A9100375D31 /* viewControllerPlane.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = viewControllerPlane.swift; sourceTree = "<group>"; };
 		0B29602122B33D2000375D31 /* ObjectBoundriesBean.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObjectBoundriesBean.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -117,7 +115,6 @@
 				04279A6222AE7FBB00CA48F0 /* Media.scnassets */,
 				04279A6422AE825A00CA48F0 /* menuPage.swift */,
 				04279A6A22AF67D000CA48F0 /* CircularProgress.swift */,
-				0B29601F22B33A9100375D31 /* viewControllerPlane.swift */,
 			);
 			path = "Nasty Pumpkins";
 			sourceTree = "<group>";
@@ -274,7 +271,6 @@
 			files = (
 				0B29602222B33D2000375D31 /* ObjectBoundriesBean.swift in Sources */,
 				04279A6B22AF67D000CA48F0 /* CircularProgress.swift in Sources */,
-				0B29602022B33A9100375D31 /* viewControllerPlane.swift in Sources */,
 				04279A3522AE7B9C00CA48F0 /* ViewController.swift in Sources */,
 				04279A6522AE825A00CA48F0 /* menuPage.swift in Sources */,
 				04279A3322AE7B9C00CA48F0 /* AppDelegate.swift in Sources */,
