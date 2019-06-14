@@ -145,12 +145,76 @@
                         <viewLayoutGuide key="safeArea" id="lvN-8Z-0B5"/>
                     </view>
                     <connections>
-                        <segue destination="BYZ-38-t0r" kind="presentation" identifier="moveToGame" id="TJd-GZ-Xbm"/>
+                        <segue destination="kHv-iA-HHz" kind="presentation" identifier="movePlaneDetection" id="NaT-te-tWS"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iyc-7d-gcW" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="108.69565217391305" y="155.35714285714286"/>
+        </scene>
+        <!--View Controller Plane-->
+        <scene sceneID="AX0-Qe-3I5">
+            <objects>
+                <viewController id="kHv-iA-HHz" customClass="viewControllerPlane" customModule="Nasty_Pumpkins" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="EMR-Y1-AtL">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <arscnView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="vFD-22-ns7">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </arscnView>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Vet-b2-lTV">
+                                <rect key="frame" x="165" y="360" width="84" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Next Screen"/>
+                                <connections>
+                                    <action selector="burronpress:" destination="kHv-iA-HHz" eventType="touchUpInside" id="2w4-Nh-N07"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mUM-Sr-Rke">
+                                <rect key="frame" x="20" y="832" width="93" height="30"/>
+                                <state key="normal" title="Start Tapping"/>
+                                <connections>
+                                    <action selector="onStartScanningClick:" destination="kHv-iA-HHz" eventType="touchUpInside" id="pDg-16-cri"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="V2S-c2-5zF">
+                                <rect key="frame" x="303" y="832" width="91" height="30"/>
+                                <state key="normal" title="Stop Tapping"/>
+                                <connections>
+                                    <action selector="onStopScanningClick:" destination="kHv-iA-HHz" eventType="touchUpInside" id="mbP-AO-VfN"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="w8D-pO-1mB">
+                                <rect key="frame" x="144" y="44" width="127" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Show Playing Area"/>
+                                <connections>
+                                    <action selector="onShowAllModelledObjectsClick:" destination="kHv-iA-HHz" eventType="touchUpInside" id="YbD-bo-EAj"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="XpH-xD-ggd" firstAttribute="bottom" secondItem="mUM-Sr-Rke" secondAttribute="bottom" id="3gL-HI-sL9"/>
+                            <constraint firstItem="XpH-xD-ggd" firstAttribute="trailing" secondItem="V2S-c2-5zF" secondAttribute="trailing" constant="20" id="5F1-yt-21d"/>
+                            <constraint firstItem="mUM-Sr-Rke" firstAttribute="leading" secondItem="XpH-xD-ggd" secondAttribute="leading" constant="20" id="hlV-ef-bKX"/>
+                            <constraint firstItem="XpH-xD-ggd" firstAttribute="bottom" secondItem="V2S-c2-5zF" secondAttribute="bottom" id="lJd-ek-1Sx"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="XpH-xD-ggd"/>
+                    </view>
+                    <connections>
+                        <outlet property="sceneView" destination="vFD-22-ns7" id="CD7-eE-4Hg"/>
+                        <outlet property="showAllModelledObjButton" destination="w8D-pO-1mB" id="Ev2-p5-71a"/>
+                        <outlet property="startButtonObject" destination="mUM-Sr-Rke" id="mqI-ay-N9F"/>
+                        <outlet property="stopButtonObject" destination="V2S-c2-5zF" id="TLh-TD-DUs"/>
+                        <segue destination="BYZ-38-t0r" kind="presentation" identifier="moveToGame" id="BNL-Lt-uzJ"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="56B-7m-q6T" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="108.69565217391305" y="969.64285714285711"/>
         </scene>
     </scenes>
     <resources>

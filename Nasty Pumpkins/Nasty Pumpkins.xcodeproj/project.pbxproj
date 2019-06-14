@@ -17,6 +17,8 @@
 		04279A6322AE7FBB00CA48F0 /* Media.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = 04279A6222AE7FBB00CA48F0 /* Media.scnassets */; };
 		04279A6522AE825A00CA48F0 /* menuPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04279A6422AE825A00CA48F0 /* menuPage.swift */; };
 		04279A6B22AF67D000CA48F0 /* CircularProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04279A6A22AF67D000CA48F0 /* CircularProgress.swift */; };
+		0B29602022B33A9100375D31 /* viewControllerPlane.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B29601F22B33A9100375D31 /* viewControllerPlane.swift */; };
+		0B29602222B33D2000375D31 /* ObjectBoundriesBean.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B29602122B33D2000375D31 /* ObjectBoundriesBean.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -43,7 +45,7 @@
 		04279A3722AE7B9C00CA48F0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		04279A3922AE7B9D00CA48F0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		04279A3C22AE7B9D00CA48F0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		04279A3E22AE7B9D00CA48F0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		04279A3E22AE7B9D00CA48F0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = "Nasty Pumpkins/Info.plist"; sourceTree = SOURCE_ROOT; };
 		04279A4322AE7B9D00CA48F0 /* Nasty PumpkinsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Nasty PumpkinsTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		04279A4722AE7B9D00CA48F0 /* Nasty_PumpkinsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Nasty_PumpkinsTests.swift; sourceTree = "<group>"; };
 		04279A4922AE7B9D00CA48F0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -53,6 +55,8 @@
 		04279A6222AE7FBB00CA48F0 /* Media.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = Media.scnassets; sourceTree = "<group>"; };
 		04279A6422AE825A00CA48F0 /* menuPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = menuPage.swift; sourceTree = "<group>"; };
 		04279A6A22AF67D000CA48F0 /* CircularProgress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircularProgress.swift; sourceTree = "<group>"; };
+		0B29601F22B33A9100375D31 /* viewControllerPlane.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = viewControllerPlane.swift; sourceTree = "<group>"; };
+		0B29602122B33D2000375D31 /* ObjectBoundriesBean.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ObjectBoundriesBean.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -106,12 +110,14 @@
 				04279A3222AE7B9C00CA48F0 /* AppDelegate.swift */,
 				04279A3422AE7B9C00CA48F0 /* ViewController.swift */,
 				04279A3622AE7B9C00CA48F0 /* Main.storyboard */,
+				0B29602122B33D2000375D31 /* ObjectBoundriesBean.swift */,
 				04279A3922AE7B9D00CA48F0 /* Assets.xcassets */,
 				04279A3B22AE7B9D00CA48F0 /* LaunchScreen.storyboard */,
 				04279A3E22AE7B9D00CA48F0 /* Info.plist */,
 				04279A6222AE7FBB00CA48F0 /* Media.scnassets */,
 				04279A6422AE825A00CA48F0 /* menuPage.swift */,
 				04279A6A22AF67D000CA48F0 /* CircularProgress.swift */,
+				0B29601F22B33A9100375D31 /* viewControllerPlane.swift */,
 			);
 			path = "Nasty Pumpkins";
 			sourceTree = "<group>";
@@ -266,7 +272,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0B29602222B33D2000375D31 /* ObjectBoundriesBean.swift in Sources */,
 				04279A6B22AF67D000CA48F0 /* CircularProgress.swift in Sources */,
+				0B29602022B33A9100375D31 /* viewControllerPlane.swift in Sources */,
 				04279A3522AE7B9C00CA48F0 /* ViewController.swift in Sources */,
 				04279A6522AE825A00CA48F0 /* menuPage.swift in Sources */,
 				04279A3322AE7B9C00CA48F0 /* AppDelegate.swift in Sources */,
@@ -445,13 +453,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 637TH2TD7Z;
+				DEVELOPMENT_TEAM = 759VFSCZVS;
 				INFOPLIST_FILE = "Nasty Pumpkins/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = test.counterapp3.com;
+				PRODUCT_BUNDLE_IDENTIFIER = "test.counterapp3-sunny.com";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -463,13 +471,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 637TH2TD7Z;
+				DEVELOPMENT_TEAM = 759VFSCZVS;
 				INFOPLIST_FILE = "Nasty Pumpkins/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = test.counterapp3.com;
+				PRODUCT_BUNDLE_IDENTIFIER = "test.counterapp3-sunny.com";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

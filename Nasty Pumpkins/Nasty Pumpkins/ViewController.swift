@@ -19,7 +19,10 @@ class ViewController: UIViewController, SCNPhysicsContactDelegate {
     //Max and current sones/objects
     var currentStones: Float = 0.0
     var maxStones: Float = 15.0
-    
+    var centroidList: [SCNVector3] = []
+    var eulerList: [SCNVector3] = []
+    var boundaryList: [ObjectBoundaries] = []
+    var transform : simd_float4x4 = matrix_identity_float4x4
     //variable to toggle oreientation button
     var buttonIsOn: Bool = false
 
@@ -55,8 +58,14 @@ class ViewController: UIViewController, SCNPhysicsContactDelegate {
     //Standard function
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.sceneView.debugOptions = [ARSCNDebugOptions.showWorldOrigin]
         self.sceneView.session.run(configuration)
+        self.sceneView.session.setWorldOrigin(relativeTransform: transform)
         self.sceneView.autoenablesDefaultLighting = true
+        print("####### Recieved Arrays ######")
+        print(boundaryList.count)
+        print(eulerList.count)
+        print(centroidList.count)
         
         //Recognize the phone tap gesture
         let gestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTap(sender:)))
@@ -142,7 +151,13 @@ class ViewController: UIViewController, SCNPhysicsContactDelegate {
         }
         
         //Make placeholder wall
-        self.addWall(x: 0, y: 0, z: -2)
+        var index = 0
+        for _ in centroidList{
+            print("in for loop")
+            self.addWall(x: centroidList[index].x, y: centroidList[index].x, z: centroidList[index].x, width: boundaryList[index].width, height: boundaryList[index].height, eulerangle: eulerList[index])
+            index+=1
+        }
+        
         
         //Call horizontal progress bar
         timeLeft.setProgress(currentStones, animated: true)
@@ -154,11 +169,12 @@ class ViewController: UIViewController, SCNPhysicsContactDelegate {
     }
     
     
-    func addWall(x: Float, y: Float, z: Float) {
-        
-        let wall = SCNNode(geometry: SCNBox(width: 0.2, height: 0.2, length: 0.2, chamferRadius: 0.05))
+    func addWall(x: Float, y: Float, z: Float, width: Float, height: Float, eulerangle: SCNVector3) {
+        print("in add wall")
+        let wall = SCNNode(geometry: SCNPlane(width: CGFloat(width), height: CGFloat(height)))
         wall.geometry?.firstMaterial?.diffuse.contents = UIColor.red
         wall.position = SCNVector3(x,y,z)
+        wall.eulerAngles = eulerangle
         
         let wallBody = SCNPhysicsBody(type: .static, shape: SCNPhysicsShape(node: wall, options: nil))
         wall.physicsBody = wallBody
