@@ -167,17 +167,42 @@ class ViewController: UIViewController, SCNPhysicsContactDelegate {
         sender.isHidden = true
         
         var n:Int = 0
-        
-        while(n<=5){
-            
-            let randX = Float.random(in: -10...10)
-            let randY = Float.random(in: -10...10)
-            let randZ = Float.random(in: 20...150)
-            
-            self.addPumpkin(x: randX, y: randY, z: -randZ)
-            
-            n += 1
+        // Getting the PLane Information
+        //Now proceed to show the object
+        var index = 0;
+        var x:Float = 0
+        var y:Float = 0
+        var z:Float = 0
+        var eulerangles : SCNVector3
+        //Objects are scanned  scanned now. Lets Store its 3D ARCloud Model
+        for _ in self.realWorldObjectArray{
+            /// Computed parameters of all the playing sufraces detected
+            /// These are the position, width, height and euler angles w.r.t to the plane generated
+            let objectBoundaries = self.realWorldObjectMaxBoundriesArray[index]
+            let height = 2*(self.getHeightBasedOnOrientation(objectBoundaries: objectBoundaries,eulerAngle: self.realWorldObjectEulerArray[index]))
+            let width = 2 * CGFloat(objectBoundaries.getMaxX())
+            x = self.realWorldObjectCentroidArray[index].x
+            y = self.realWorldObjectCentroidArray[index].y
+            z = self.realWorldObjectCentroidArray[index].z
+            eulerangles = self.realWorldObjectEulerArray[index]
+            ///----------------------------------------------------
+            while(n<=5){
+                
+//                let randX = Float.random(in: x-0.5...x+0.5)
+//                let randY = Float.random(in: y-0.5...y+0.5)
+//                let randZ = Float.random(in: z+0.5...z+0.8)
+                
+                //self.addPumpkin(x: x+Float(n), y: y+Float(n), z: z-5*Float(n))
+                let sphere = SCNNode(geometry: SCNSphere(radius: 0.03))
+                sphere.geometry?.firstMaterial?.diffuse.contents = UIColor.green
+                sphere.position = SCNVector3(x,y,z-0.1*Float(n))
+                self.sceneView.scene.rootNode.addChildNode(sphere)
+                
+                n += 1
+            }
+            index += 1
         }
+       
         
         //Make placeholder wall
 //        var index = 0
@@ -454,11 +479,11 @@ class ViewController: UIViewController, SCNPhysicsContactDelegate {
         let objectBoundaries = self.realWorldObjectMaxBoundriesArray[index]
         
         let height = self.getHeightBasedOnOrientation(objectBoundaries: objectBoundaries,eulerAngle: self.realWorldObjectEulerArray[index])
+        // getter and setter
         let width = 2 * CGFloat(objectBoundaries.getMaxX())
-        
         self.realWorldObjectMaxBoundriesArray[index].height = Float(height)
         self.realWorldObjectMaxBoundriesArray[index].width = Float(width)
-        
+        //
         
         let planeOfReference = SCNNode(geometry: SCNPlane(width: 2 * CGFloat(objectBoundaries.getMaxX()), height: 2 * height))
         
