@@ -2,7 +2,7 @@
 //  ViewController.swift
 //  Nasty Pumpkins
 //
-//  Created by Aditya Gupta on 2019-05-30.
+//  Created by Aditya Gupta on 6/10/19.
 //  Copyright © 2019 Aditya Gupta. All rights reserved.
 //
 
@@ -15,16 +15,46 @@ enum BitMaskCategory: Int {
 }
 
 class ViewController: UIViewController, SCNPhysicsContactDelegate {
+    
+    //Max and current sones/objects
+    var currentStones: Float = 0.0
+    var maxStones: Float = 15.0
+    
+    //variable to toggle oreientation button
+    var buttonIsOn: Bool = false
 
-    @IBOutlet weak var sceneView: ARSCNView!
+    //No. of stones progress bar
+    @IBOutlet weak var timeLeft: UIProgressView!
+
+    //Button press to go back to main page
+    @IBAction func backButton(_ sender: Any) {
+         dismiss(animated: true, completion: nil)
+    }
+    
+    
+    //Button press to show 3D Orientation and feature points
+    @IBAction func orientation(_ sender: Any) {
+        if buttonIsOn{
+            self.sceneView.debugOptions = []
+            buttonIsOn = false
+        } else{
+            self.sceneView.debugOptions = [ARSCNDebugOptions.showWorldOrigin, ARSCNDebugOptions.showFeaturePoints]
+            buttonIsOn = true
+        }
+    }
+    
+    
+    //Add sceneView
+    @IBOutlet var sceneView: ARSCNView!
     let configuration = ARWorldTrackingConfiguration()
     //Variable power to add impulse to stone throws
     var power: Float = 50
     var Target: SCNNode?
+    
+    
+    //Standard function
     override func viewDidLoad() {
         super.viewDidLoad()
-        //Standard options, to be added to all games
-        self.sceneView.debugOptions = [ARSCNDebugOptions.showWorldOrigin, ARSCNDebugOptions.showFeaturePoints]
         self.sceneView.session.run(configuration)
         self.sceneView.autoenablesDefaultLighting = true
         
@@ -33,7 +63,26 @@ class ViewController: UIViewController, SCNPhysicsContactDelegate {
         self.sceneView.addGestureRecognizer(gestureRecognizer)
         self.sceneView.scene.physicsWorld.contactDelegate = self
         
+        
+        timeLeft.layer.cornerRadius = 2
+        timeLeft.clipsToBounds = true
+        timeLeft.layer.sublayers![1].cornerRadius = 2
+        timeLeft.subviews[1].clipsToBounds = true
+        
+        
+        //Defining circular progress bar
+        let circularProgress = CircularProgress(frame: CGRect(x: 10.0, y: 30.0, width: 100.0, height: 100.0))
+        circularProgress.progressColor = UIColor.orange
+        //(red: 52.0/255.0, green: 141.0/255.0, blue: 252.0/255.0, alpha: 1.0)
+        circularProgress.trackColor = UIColor.white
+        //(red: 52.0/255.0, green: 141.0/255.0, blue: 252.0/255.0, alpha: 0.6)
+        circularProgress.tag = 101
+        circularProgress.center = self.view.center
+        self.view.addSubview(circularProgress)
+        
     }
+    
+    
     //Standard
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -66,21 +115,58 @@ class ViewController: UIViewController, SCNPhysicsContactDelegate {
         rock.physicsBody?.categoryBitMask = BitMaskCategory.rock.rawValue
         rock.physicsBody?.contactTestBitMask = BitMaskCategory.target.rawValue
         self.sceneView.scene.rootNode.addChildNode(rock)
-        //rock.runAction(
-            //SCNAction.sequence([SCNAction.wait(duration: 2.0),
-                                //SCNAction.removeFromParentNode()])
-        //)
-    }
-    
-    //Make 5 pumpkins at different distances
-    @IBAction func addTargets(_ sender: Any) {
-        self.addPumpkin(x: 8, y: 0, z: -20)
-        self.addPumpkin(x: 0, y: 0, z: -70)
-        self.addPumpkin(x: 6, y: 10, z: -100)
-        self.addPumpkin(x: -2, y: 13, z: -135)
-        self.addPumpkin(x: -6, y: -5, z: -40)
+        
+        
+        //Counting stones
+        perform(#selector(updateProgress), with: nil, afterDelay: 1.0 )
         
     }
+    
+    
+    //Button to make 5 pumpkins at different (or random) distances
+    @IBAction func addTargets(_ sender: UIButton) {
+        
+        sender.isHidden = true
+        
+        var n:Int = 0
+        
+        while(n<=5){
+            
+            let randX = Float.random(in: -10...10)
+            let randY = Float.random(in: -10...10)
+            let randZ = Float.random(in: 20...150)
+            
+            self.addPumpkin(x: randX, y: randY, z: -randZ)
+            
+            n += 1
+        }
+        
+        //Make placeholder wall
+        self.addWall(x: 0, y: 0, z: -2)
+        
+        //Call horizontal progress bar
+        timeLeft.setProgress(currentStones, animated: true)
+        //perform(#selector(updateProgress), with: nil, afterDelay: 1.0 )
+        
+        //Call circular progress bar
+        self.perform(#selector(animateProgress), with: nil, afterDelay: 1)
+        
+    }
+    
+    
+    func addWall(x: Float, y: Float, z: Float) {
+        
+        let wall = SCNNode(geometry: SCNBox(width: 0.2, height: 0.2, length: 0.2, chamferRadius: 0.05))
+        wall.geometry?.firstMaterial?.diffuse.contents = UIColor.red
+        wall.position = SCNVector3(x,y,z)
+        
+        let wallBody = SCNPhysicsBody(type: .static, shape: SCNPhysicsShape(node: wall, options: nil))
+        wall.physicsBody = wallBody
+        
+        self.sceneView.scene.rootNode.addChildNode(wall)
+        
+    }
+    
     
     func addPumpkin(x: Float, y: Float, z: Float) {
         //Pumpkin is a 3D scnekit item
@@ -91,6 +177,8 @@ class ViewController: UIViewController, SCNPhysicsContactDelegate {
         pumpkinNode.physicsBody?.categoryBitMask = BitMaskCategory.target.rawValue
         pumpkinNode.physicsBody?.contactTestBitMask = BitMaskCategory.rock.rawValue
         self.sceneView.scene.rootNode.addChildNode(pumpkinNode)
+        
+        
     }
     func physicsWorld(_ world: SCNPhysicsWorld, didBegin contact: SCNPhysicsContact) {
         let nodeA = contact.nodeA
@@ -113,8 +201,86 @@ class ViewController: UIViewController, SCNPhysicsContactDelegate {
         Target?.removeFromParentNode()
         
     }
+
+
+    //Function for timer progress bar in the game
+    @objc func updateProgress(){
+        
+        if currentStones < maxStones{
+            currentStones = currentStones + 1.0
+            timeLeft.progress = currentStones/maxStones
+        }else{
+            dismiss(animated: true, completion: nil)
+        }
+            
+        //currentStones = currentStones + 1.0
+        //timeLeft.progress = currentStones/maxStones
+        
+        /*
+        if currentStones < maxStones{
+            perform(#selector(updateProgress), with: nil, afterDelay: 1.0 )
+        }else{
+            currentStones = 0.0
+            
+            return
+        }*/
+    }
+    
+    //Circular Progress bar - call touch class
+    @objc func animateProgress() {
+        let cp = self.view.viewWithTag(101) as! CircularProgress
+        //Define time duration allowed
+        cp.setProgressWithAnimation(duration: 15.0, value: 1.0)
+    }
+    
 }
 
+//Function to define "+" sign to add POV and Orentation = Location
 func +(left: SCNVector3, right: SCNVector3) -> SCNVector3 {
     return SCNVector3Make(left.x + right.x, left.y + right.y, left.z + right.z)
 }
+
+
+
+
+
+/*
+ 
+ Extra - Old Code
+
+ 
+ /*
+ //Function for timer in the game
+ @objc func game(){
+ 
+ 
+ if gameInt <= 0{
+ gameTimer.invalidate()
+ return
+ }else{
+ gameInt -= 1
+ timeLabel.text = " "+String(gameInt)+"    "
+ }
+ 
+ }
+ */
+ 
+ 
+ 
+ //Max game time default 30sec
+ //var gameInt = 30
+ //Timer function to set game time limit
+ //var gameTimer = Timer()
+ 
+ //Oreintation Button toggle
+ 
+ //toggle to turn on/off the timer
+ //var timerToggle: Bool = false
+ 
+ //Time label to show time remianing
+ //@IBOutlet var timeLabel: UILabel!
+ 
+ 
+ //@IBOutlet var progressBar: CircularProgressBar!
+ 
+ */
