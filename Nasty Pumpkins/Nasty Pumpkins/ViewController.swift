@@ -12,6 +12,7 @@ import ARKit
 enum BitMaskCategory: Int {
     case rock = 2
     case target = 5
+    case plane = 0
 }
 
 class ViewController: UIViewController, SCNPhysicsContactDelegate {
@@ -78,6 +79,7 @@ class ViewController: UIViewController, SCNPhysicsContactDelegate {
     //Variable power to add impulse to stone throws
     var power: Float = 50
     var Target: SCNNode?
+    var rock: SCNNode?
     
     
     //Standard function
@@ -166,7 +168,7 @@ class ViewController: UIViewController, SCNPhysicsContactDelegate {
         
         sender.isHidden = true
         
-        var n:Int = 0
+//        var n:Int = 0
         // Getting the PLane Information
         //Now proceed to show the object
         var index = 0;
@@ -179,27 +181,32 @@ class ViewController: UIViewController, SCNPhysicsContactDelegate {
             /// Computed parameters of all the playing sufraces detected
             /// These are the position, width, height and euler angles w.r.t to the plane generated
             let objectBoundaries = self.realWorldObjectMaxBoundriesArray[index]
-            let height = 2*(self.getHeightBasedOnOrientation(objectBoundaries: objectBoundaries,eulerAngle: self.realWorldObjectEulerArray[index]))
-            let width = 2 * CGFloat(objectBoundaries.getMaxX())
+//            let height = 2*(self.getHeightBasedOnOrientation(objectBoundaries: objectBoundaries,eulerAngle: self.realWorldObjectEulerArray[index]))
+//            let width = 2 * CGFloat(objectBoundaries.getMaxX())
             x = self.realWorldObjectCentroidArray[index].x
             y = self.realWorldObjectCentroidArray[index].y
             z = self.realWorldObjectCentroidArray[index].z
             eulerangles = self.realWorldObjectEulerArray[index]
             ///----------------------------------------------------
-            while(n<=5){
-                
-//                let randX = Float.random(in: x-0.5...x+0.5)
-//                let randY = Float.random(in: y-0.5...y+0.5)
-//                let randZ = Float.random(in: z+0.5...z+0.8)
-                
-                //self.addPumpkin(x: x+Float(n), y: y+Float(n), z: z-5*Float(n))
-                let sphere = SCNNode(geometry: SCNSphere(radius: 0.03))
-                sphere.geometry?.firstMaterial?.diffuse.contents = UIColor.green
-                sphere.position = SCNVector3(x,y,z-0.1*Float(n))
-                self.sceneView.scene.rootNode.addChildNode(sphere)
-                
-                n += 1
-            }
+//            while(n<=5){
+//
+////                let randX = Float.random(in: x-0.5...x+0.5)
+////                let randY = Float.random(in: y-0.5...y+0.5)
+////                let randZ = Float.random(in: z+0.5...z+0.8)
+//
+//                //self.addPumpkin(x: x+Float(n), y: y+Float(n), z: z-5*Float(n))
+//                let sphere = SCNNode(geometry: SCNSphere(radius: 0.03))
+//                sphere.geometry?.firstMaterial?.diffuse.contents = UIColor.green
+//                sphere.position = SCNVector3(x,y,z-0.1*Float(n))
+//                self.sceneView.scene.rootNode.addChildNode(sphere)
+//
+//                n += 1
+//            }
+            
+            self.addPumpkin(x: x, y: y, z: z)
+            self.addPumpkin(x: x, y: y, z: z)
+            self.addPumpkin(x: x, y: y, z: z)
+            
             index += 1
         }
        
@@ -223,52 +230,130 @@ class ViewController: UIViewController, SCNPhysicsContactDelegate {
     }
     
     
-    func addWall(x: Float, y: Float, z: Float, width: Float, height: Float, eulerangle: SCNVector3) {
-        print("in add wall")
-        let wall = SCNNode(geometry: SCNPlane(width: 2*CGFloat(width), height: 2*CGFloat(height)))
-        wall.geometry?.firstMaterial?.diffuse.contents = UIColor.red
-        wall.position = SCNVector3(x,y,z)
-        wall.eulerAngles = eulerangle
-        
-        let wallBody = SCNPhysicsBody(type: .static, shape: SCNPhysicsShape(node: wall, options: nil))
-        wall.physicsBody = wallBody
-        
-        self.sceneView.scene.rootNode.addChildNode(wall)
-        
-    }
+//    func addWall(x: Float, y: Float, z: Float, width: Float, height: Float, eulerangle: SCNVector3) {
+//        print("in add wall")
+//        let wall = SCNNode(geometry: SCNPlane(width: 2*CGFloat(width), height: 2*CGFloat(height)))
+//        wall.geometry?.firstMaterial?.diffuse.contents = UIColor.red
+//        wall.position = SCNVector3(x,y,z)
+//        wall.eulerAngles = eulerangle
+//
+//        let wallBody = SCNPhysicsBody(type: .static, shape: SCNPhysicsShape(node: wall, options: nil))
+//        wall.physicsBody = wallBody
+//
+//        self.sceneView.scene.rootNode.addChildNode(wall)
+//
+//    }
     
     
     func addPumpkin(x: Float, y: Float, z: Float) {
         //Pumpkin is a 3D scnekit item
         let pumpkinScene = SCNScene(named: "Media.scnassets/Halloween_Pumpkin.scn")
         let pumpkinNode = (pumpkinScene?.rootNode.childNode(withName: "Halloween_Pumpkin", recursively: false))!
-        pumpkinNode.position = SCNVector3(x,y,z)
-        pumpkinNode.physicsBody = SCNPhysicsBody(type: .static, shape: SCNPhysicsShape(node: pumpkinNode, options: nil))
+        pumpkinNode.position = SCNVector3(x,y,z-Float.random(in: 20...40))
+        
+        let phy_body = SCNPhysicsBody(type: .static, shape: SCNPhysicsShape(node: pumpkinNode, options: nil))
+        
+        pumpkinNode.physicsBody = phy_body
         pumpkinNode.physicsBody?.categoryBitMask = BitMaskCategory.target.rawValue
         pumpkinNode.physicsBody?.contactTestBitMask = BitMaskCategory.rock.rawValue
         self.sceneView.scene.rootNode.addChildNode(pumpkinNode)
         
+        //randomly assigning either 2D movement or movement towards POV
+        let number = Int.random(in: 0 ... 1)
+        if number == 0 {
+            self.twoDimensionalMovement(node: pumpkinNode)
+        } else {
+            self.towardsPOVMovement(node: pumpkinNode)
+        }
+    }
+    
+    func towardsPOVMovement(node: SCNNode) {
+        guard let pointOfView = self.sceneView.pointOfView else {return}
+        let transform = pointOfView.transform
+        let orientation = SCNVector3(-transform.m31, -transform.m32, -transform.m33)
+        let location = SCNVector3(transform.m41, transform.m42, transform.m43)
+//        let position = orientation + location
+        
+        let hover = SCNAction.move(to: location, duration: 3)
+        
+        node.runAction(hover)
+        node.runAction(
+            SCNAction.sequence([SCNAction.wait(duration: 3.0),
+                                SCNAction.removeFromParentNode()])
+        )
+
+        // bokeh when pumpkin reaches POV
+        if(SCNVector3EqualToVector3(node.position, location)) {
+            let bokeh = SCNParticleSystem(named: "Media.scnassets/bokeh.scnp", inDirectory: nil)
+            bokeh?.loops = false
+            bokeh?.particleLifeSpan = 6
+            bokeh?.emitterShape = node.geometry
+            let bokehNode = SCNNode()
+            bokehNode.addParticleSystem(bokeh!)
+            bokehNode.position = location
+            self.sceneView.scene.rootNode.addChildNode(bokehNode)
+            node.runAction(SCNAction.removeFromParentNode())
+            
+            let plane_count = self.realWorldObjectCentroidArray.count
+            
+            if (plane_count > 0) {
+                let index_val = Int.random(in: 0 ... plane_count-1)
+                self.addPumpkin(x: self.realWorldObjectCentroidArray[index_val].x, y: self.realWorldObjectCentroidArray[index_val].y, z: self.realWorldObjectCentroidArray[index_val].z)
+            }
+        }
+
+    }
+    
+    
+    func twoDimensionalMovement(node: SCNNode) {
+        let hover_x = CGFloat.random(in: -5...5)
+        let hover_y = CGFloat.random(in: -5...5)
+        let hoverUp = SCNAction.moveBy(x: hover_x, y: hover_y, z: 0, duration: 1)
+        let hoverDown = SCNAction.moveBy(x: -(hover_x), y: -(hover_y), z: 0, duration: 1)
+        let hoverSequence = SCNAction.sequence([hoverUp, hoverDown])
+        let repeatForever = SCNAction.repeatForever(hoverSequence)
+        
+        node.runAction(repeatForever)
         
     }
+    
     func physicsWorld(_ world: SCNPhysicsWorld, didBegin contact: SCNPhysicsContact) {
         let nodeA = contact.nodeA
         let nodeB = contact.nodeB
-        if nodeA.physicsBody?.categoryBitMask == BitMaskCategory.target.rawValue {
-            self.Target = nodeA
-        } else if nodeB.physicsBody?.categoryBitMask == BitMaskCategory.target.rawValue {
-            self.Target = nodeB
-        }
         
-        //Add animation = bokeh to pumkin being hit, then delte pumpkin child node
-        let bokeh = SCNParticleSystem(named: "Media.scnassets/bokeh.scnp", inDirectory: nil)
-        bokeh?.loops = false
-        bokeh?.particleLifeSpan = 6
-        bokeh?.emitterShape = Target?.geometry
-        let bokehNode = SCNNode()
-        bokehNode.addParticleSystem(bokeh!)
-        bokehNode.position = contact.contactPoint
-        self.sceneView.scene.rootNode.addChildNode(bokehNode)
-        Target?.removeFromParentNode()
+        // Nothing should happen if rock or pumpkin touches the plane
+        if (nodeA.physicsBody?.categoryBitMask == BitMaskCategory.plane.rawValue || nodeB.physicsBody?.categoryBitMask == BitMaskCategory.plane.rawValue) {
+            return
+        }
+        else {
+            if nodeA.physicsBody?.categoryBitMask == BitMaskCategory.target.rawValue {
+                self.Target = nodeA
+                self.rock = nodeB
+            } else if nodeB.physicsBody?.categoryBitMask == BitMaskCategory.target.rawValue {
+                self.Target = nodeB
+                self.rock = nodeA
+            }
+            
+            //Add animation = bokeh to pumkin being hit, then delte pumpkin child node
+            let bokeh = SCNParticleSystem(named: "Media.scnassets/bokeh.scnp", inDirectory: nil)
+            bokeh?.loops = false
+            bokeh?.particleLifeSpan = 6
+            bokeh?.emitterShape = Target?.geometry
+            let bokehNode = SCNNode()
+            bokehNode.addParticleSystem(bokeh!)
+            bokehNode.position = contact.contactPoint
+            self.sceneView.scene.rootNode.addChildNode(bokehNode)
+            Target?.removeFromParentNode()
+            rock?.removeFromParentNode()
+            
+            let plane_count = self.realWorldObjectCentroidArray.count
+            
+            // Add a new pumpkin everytime one gets shot
+            if (plane_count > 0) {
+                let index_val = Int.random(in: 0 ... plane_count-1)
+                self.addPumpkin(x: self.realWorldObjectCentroidArray[index_val].x, y: self.realWorldObjectCentroidArray[index_val].y, z: self.realWorldObjectCentroidArray[index_val].z)
+            }
+        }
         
     }
 
