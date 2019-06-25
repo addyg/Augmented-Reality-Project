@@ -51,12 +51,17 @@ class ViewController: UIViewController, SCNPhysicsContactDelegate {
     var dist_y: [Float] = []
     var dist_z: [Float] = []
     var param_array = Set<vector_float3>()
-    var realWorldObjectArray: [Set<vector_float3>] = []
+    var realWorldObjectArray: [[SCNVector3]] = []
     var realWorldObjectCentroidArray: [SCNVector3] = []
     var realWorldObjectEulerArray: [SCNVector3] = []
     var realWorldObjectMaxBoundriesArray: [ObjectBoundaries] = []
     var transformcordinate : simd_float4x4 = matrix_identity_float4x4
     var scanningComplete = true
+    var x = Float(0)
+    var y = Float(0)
+    var z = Float(0)
+    var indices: [Int32] = []
+    var vertices: [SCNVector3] = []
     ///////////////////////////////////////////////////////////////////
     
     
@@ -88,6 +93,7 @@ class ViewController: UIViewController, SCNPhysicsContactDelegate {
     
     //Standard function
     override func viewDidLoad() {
+       
         super.viewDidLoad()
         sceneView.debugOptions = [ARSCNDebugOptions.showWorldOrigin, ARSCNDebugOptions.showFeaturePoints]
         self.sceneView.session.run(configuration)
@@ -166,8 +172,93 @@ class ViewController: UIViewController, SCNPhysicsContactDelegate {
         //Counting stones
         perform(#selector(updateProgress), with: nil, afterDelay: 1.0 )
         }
+        else{
+            if(self.isScanningComplete()){
+                            // TODO: Show a message to tell the user to press the start tapping option
+                            return
+            }
+            let currentPoint = sender.location(in: sceneView)
+            // Get all feature points in the current frame
+            
+            let fp = self.sceneView.session.currentFrame?.rawFeaturePoints
+            guard let count = fp?.points.count else{return}
+            // Create a material
+            let material = createMaterial()
+            var point_count = 0
+            // Loop over them and check if any exist near our touch location
+            // If a point exists in our range, let's draw a sphere at that feature point
+            print(count)
+            for index in 0..<count {
+                let point = SCNVector3.init((fp?.points[index].x)!, (fp?.points[index].y)!, (fp?.points[index].z)!)
+                let projection = self.sceneView.projectPoint(point)
+                let xRange:ClosedRange<Float> = Float(currentPoint.x)-100.0...Float(currentPoint.x)+100.0
+                let yRange:ClosedRange<Float> = Float(currentPoint.y)-100.0...Float(currentPoint.y)+100.0
+                if (xRange ~= projection.x && yRange ~= projection.y) {
+                    let ballShape = SCNSphere(radius: 0.002)
+                    ballShape.materials = [material]
+                    let ballnode = SCNNode(geometry: ballShape)
+                    ballnode.position = point
+                    self.sceneView.scene.rootNode.addChildNode(ballnode)
+                    // We'll also save it for later use in our [SCNVector]
+                    //                let p_oints = CGPoint(x: CGFloat(point.x), y: CGFloat(point.y))
+                    //                points.append(p_oints)
+                    //                pointcloud.insert(vector_float3(point))
+                    x = x + point.x
+                    y = y + point.y
+                    z = z + point.z
+                    point_count+=1
+                    
+                }
+            }
+            if point_count>0{
+                
+                print("x",(((x/Float(point_count))*100).rounded(.down))/100)
+                print("y",y/Float(point_count))
+                print("z",z/Float(point_count))
+                
+                x=(((x/Float(point_count))*100).rounded(.down))/100
+                y=(((y/Float(point_count))*100).rounded(.down))/100
+                z=(((z/Float(point_count))*100).rounded(.down))/100
+                let sphere2 = SCNNode(geometry: SCNSphere(radius: 0.03))
+                sphere2.geometry?.firstMaterial?.diffuse.contents = UIColor.orange
+                sphere2.position = SCNVector3(CGFloat(x),CGFloat(y),CGFloat(z))
+                self.sceneView.scene.rootNode.addChildNode(sphere2)
+                vertices.append(SCNVector3([x,y,z]))
+                x=0
+                y=0
+                z=0
+                
+//                if vertices.count>=6{
+//                    if check==0{
+//                        for i in 0...vertices.count-1{
+//                            indices.append(Int32(i))
+//                            x = x+vertices[i].x
+//                            y = y+vertices[i].y
+//                            z = z+vertices[i].z
+//                        }
+//                        let sphere3 = SCNNode(geometry: SCNSphere(radius: 0.03))
+//                        sphere3.geometry?.firstMaterial?.diffuse.contents = UIColor.blue
+//                        sphere3.position = SCNVector3(CGFloat(x/Float(vertices.count)),CGFloat(y/Float(vertices.count)),CGFloat(z/Float(vertices.count)))
+//                        self.sceneView.scene.rootNode.addChildNode(sphere3)
+//                        indices.insert(Int32(vertices.count), at: 0)
+//                        plot_polygon(vertices:vertices , indices: indices)
+//                        indices = []
+//
+//                    }
+//                    check=1
+//                    x=0
+//                    y=0
+//                    z=0
+//
+//                }
+            }
+            
+            
+            
+        }
         
     }
+    
     
     
     //Button to make 5 pumpkins at different (or random) distances
@@ -193,6 +284,10 @@ class ViewController: UIViewController, SCNPhysicsContactDelegate {
             x = self.realWorldObjectCentroidArray[index].x
             y = self.realWorldObjectCentroidArray[index].y
             z = self.realWorldObjectCentroidArray[index].z
+            let sphere3 = SCNNode(geometry: SCNSphere(radius: 0.03))
+            sphere3.geometry?.firstMaterial?.diffuse.contents = UIColor.blue
+            sphere3.position = SCNVector3([x,y,z])
+            self.sceneView.scene.rootNode.addChildNode(sphere3)
             //eulerangles = self.realWorldObjectEulerArray[index]
             ///----------------------------------------------------
 //            while(n<=5){
@@ -371,6 +466,7 @@ class ViewController: UIViewController, SCNPhysicsContactDelegate {
         if currentStones < maxStones{
             currentStones = currentStones + 1.0
             timeLeft.progress = currentStones/maxStones
+            
         }else{
             /////////////// game play is hidden
             timeLeft.isHidden = true
@@ -429,43 +525,43 @@ class ViewController: UIViewController, SCNPhysicsContactDelegate {
         startgame.isHidden=true
         
     }
-    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        guard let touch = touches.first else { return }
-        
-        //If scanning is not on. Return from here
-        if(self.isScanningComplete()){
-            // TODO: Show a message to tell the user to press the start tapping option
-            return
-        }
-        
-        let currentPoint = touch.location(in: sceneView)
-        // Get all feature points in the current frame
-        
-        let fp = self.sceneView.session.currentFrame?.rawFeaturePoints
-        guard let count = fp?.points.count else{return}
-        // Create a material
-        let material = createMaterial()
-        // Loop over them and check if any exist near our touch location
-        // If a point exists in our range, let's draw a sphere at that feature point
-        for index in 0..<count {
-            let point = SCNVector3.init((fp?.points[index].x)!, (fp?.points[index].y)!, (fp?.points[index].z)!)
-            let projection = self.sceneView.projectPoint(point)
-            let xRange:ClosedRange<Float> = Float(currentPoint.x)-100.0...Float(currentPoint.x)+100.0
-            let yRange:ClosedRange<Float> = Float(currentPoint.y)-100.0...Float(currentPoint.y)+100.0
-            if (xRange ~= projection.x && yRange ~= projection.y) {
-                let ballShape = SCNSphere(radius: 0.001)
-                ballShape.materials = [material]
-                let ballnode = SCNNode(geometry: ballShape)
-                ballnode.position = point
-                self.sceneView.scene.rootNode.addChildNode(ballnode)
-                // We'll also save it for later use in our [SCNVector]
-                //                let p_oints = CGPoint(x: CGFloat(point.x), y: CGFloat(point.y))
-                //                points.append(p_oints)
-                self.param_array.insert(vector_float3(point))
-                self.lastEulerAngleDetetedForObject = self.getDyamicEulerAngles()
-            }
-        }
-    }
+//    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+//        guard let touch = touches.first else { return }
+//
+//        //If scanning is not on. Return from here
+//        if(self.isScanningComplete()){
+//            // TODO: Show a message to tell the user to press the start tapping option
+//            return
+//        }
+//
+//        let currentPoint = touch.location(in: sceneView)
+//        // Get all feature points in the current frame
+//
+//        let fp = self.sceneView.session.currentFrame?.rawFeaturePoints
+//        guard let count = fp?.points.count else{return}
+//        // Create a material
+//        let material = createMaterial()
+//        // Loop over them and check if any exist near our touch location
+//        // If a point exists in our range, let's draw a sphere at that feature point
+//        for index in 0..<count {
+//            let point = SCNVector3.init((fp?.points[index].x)!, (fp?.points[index].y)!, (fp?.points[index].z)!)
+//            let projection = self.sceneView.projectPoint(point)
+//            let xRange:ClosedRange<Float> = Float(currentPoint.x)-100.0...Float(currentPoint.x)+100.0
+//            let yRange:ClosedRange<Float> = Float(currentPoint.y)-100.0...Float(currentPoint.y)+100.0
+//            if (xRange ~= projection.x && yRange ~= projection.y) {
+//                let ballShape = SCNSphere(radius: 0.001)
+//                ballShape.materials = [material]
+//                let ballnode = SCNNode(geometry: ballShape)
+//                ballnode.position = point
+//                self.sceneView.scene.rootNode.addChildNode(ballnode)
+//                // We'll also save it for later use in our [SCNVector]
+//                //                let p_oints = CGPoint(x: CGFloat(point.x), y: CGFloat(point.y))
+//                //                points.append(p_oints)
+//                self.param_array.insert(vector_float3(point))
+//                self.lastEulerAngleDetetedForObject = self.getDyamicEulerAngles()
+//            }
+//        }
+//    }
     
     func getDyamicEulerAngles() -> SCNVector3 {
         guard let pointOfView = self.sceneView.pointOfView else {return SCNVector3(0,0,0)}
@@ -541,7 +637,7 @@ class ViewController: UIViewController, SCNPhysicsContactDelegate {
         }
     }
     
-    func calculateCentroidOfPoints(points :Set<vector_float3>) -> (SCNVector3, ObjectBoundaries){
+    func calculateCentroidOfPoints(points :[SCNVector3]) -> (SCNVector3, ObjectBoundaries){
         var xSum: Float = 0.0;
         var ySum: Float = 0.0;
         var zSum: Float = 0.0;
@@ -575,29 +671,75 @@ class ViewController: UIViewController, SCNPhysicsContactDelegate {
         
         return (SCNVector3(xC,yC,zC), objectBoundaries )
     }
-    
+    func plot_polygon(vertices: [SCNVector3], indices : [Int32]){
+        let vertexSource = SCNGeometrySource(vertices: vertices)
+        let indexData = Data(bytes: indices,
+                             count: indices.count * MemoryLayout<Int32>.size)
+        let element = SCNGeometryElement(data: indexData,
+                                         primitiveType: .polygon,
+                                         primitiveCount: 1,
+                                         bytesPerIndex: MemoryLayout<Int32>.size)
+        let geometry = SCNGeometry(sources: [vertexSource], elements: [element])
+        
+        let material = SCNMaterial()
+        material.diffuse.contents = UIColor.purple.withAlphaComponent(0.75)
+        //material.colorBufferWriteMask = []
+        material.isDoubleSided = true
+        geometry.firstMaterial = material
+        let node = SCNNode(geometry: geometry)
+       // node.renderingOrder = -1
+        self.sceneView.scene.rootNode.addChildNode(node)
+    }
     //We will Place the plane based on the Euler Angles. TC
     func placePlaneInFrontOfObjects(index: Int) {
-        let objectBoundaries = self.realWorldObjectMaxBoundriesArray[index]
-        
-        let height = self.getHeightBasedOnOrientation(objectBoundaries: objectBoundaries,eulerAngle: self.realWorldObjectEulerArray[index])
-        // getter and setter
-        let width = 2 * CGFloat(objectBoundaries.getMaxX())
-        self.realWorldObjectMaxBoundriesArray[index].height = Float(height)
-        self.realWorldObjectMaxBoundriesArray[index].width = Float(width)
+//        let objectBoundaries = self.realWorldObjectMaxBoundriesArray[index]
+//
+//        let height = self.getHeightBasedOnOrientation(objectBoundaries: objectBoundaries,eulerAngle: self.realWorldObjectEulerArray[index])
+//        // getter and setter
+//        let width = 2 * CGFloat(objectBoundaries.getMaxX())
+//        self.realWorldObjectMaxBoundriesArray[index].height = Float(height)
+//        self.realWorldObjectMaxBoundriesArray[index].width = Float(width)
         //
+    
+//        let occlusionMaterial = SCNMaterial()
+//
+//        occlusionMaterial.colorBufferWriteMask = []
         
-        let planeOfReference = SCNNode(geometry: SCNPlane(width: 2 * CGFloat(objectBoundaries.getMaxX()), height: 2 * height))
         
-        planeOfReference.geometry?.firstMaterial?.diffuse.contents = UIColor.yellow
-        planeOfReference.position = SCNVector3(self.realWorldObjectCentroidArray[index].x,self.realWorldObjectCentroidArray[index].y,self.realWorldObjectCentroidArray[index].z)
-        planeOfReference.eulerAngles = self.realWorldObjectEulerArray[index]
-        planeOfReference.geometry?.firstMaterial?.isDoubleSided = true
-        self.sceneView.scene.rootNode.addChildNode(planeOfReference)
-        let sphere = SCNNode(geometry: SCNSphere(radius: 0.03))
-        sphere.geometry?.firstMaterial?.diffuse.contents = UIColor.green
-        sphere.position = SCNVector3(self.realWorldObjectCentroidArray[index].x,self.realWorldObjectCentroidArray[index].y,self.realWorldObjectCentroidArray[index].z)
-        self.sceneView.scene.rootNode.addChildNode(sphere)
+        for i in 0...self.realWorldObjectArray[index].count-1{
+            self.indices.append(Int32(i))
+            x = x+self.realWorldObjectArray[index][i].x
+            y = y+self.realWorldObjectArray[index][i].y
+            z = z+self.realWorldObjectArray[index][i].z
+        }
+//        let sphere3 = SCNNode(geometry: SCNSphere(radius: 0.03))
+//        sphere3.geometry?.firstMaterial?.diffuse.contents = UIColor.blue
+//        sphere3.position = SCNVector3(CGFloat(x/Float(realWorldObjectArray[index].count)),CGFloat(y/Float(realWorldObjectArray[index].count)),CGFloat(z/Float(realWorldObjectArray[index].count)))
+//        self.sceneView.scene.rootNode.addChildNode(sphere3)
+        self.indices.insert(Int32(realWorldObjectArray[index].count), at: 0)
+        plot_polygon(vertices:realWorldObjectArray[index] , indices: self.indices)
+        self.indices = []
+        
+    
+        
+    
+        
+
+        
+        
+        /////
+//        let planeOfReference = SCNNode(geometry: SCNPlane(width: 2 * CGFloat(objectBoundaries.getMaxX()), height: 2 * height))
+//
+//        planeOfReference.geometry?.materials = [occlusionMaterial]
+//        planeOfReference.position = SCNVector3(self.realWorldObjectCentroidArray[index].x,self.realWorldObjectCentroidArray[index].y,self.realWorldObjectCentroidArray[index].z)
+//        planeOfReference.eulerAngles = self.realWorldObjectEulerArray[index]
+//        planeOfReference.renderingOrder = -1
+////        planeOfReference.geometry?.firstMaterial?.isDoubleSided = true
+//        self.sceneView.scene.rootNode.addChildNode(planeOfReference)
+//        let sphere = SCNNode(geometry: SCNSphere(radius: 0.03))
+//        sphere.geometry?.firstMaterial?.diffuse.contents = UIColor.green
+//        sphere.position = SCNVector3(self.realWorldObjectCentroidArray[index].x,self.realWorldObjectCentroidArray[index].y,self.realWorldObjectCentroidArray[index].z)
+//        self.sceneView.scene.rootNode.addChildNode(sphere)
     }
     
     func getHeightBasedOnOrientation(objectBoundaries: ObjectBoundaries, eulerAngle: SCNVector3) -> CGFloat {
@@ -627,9 +769,10 @@ class ViewController: UIViewController, SCNPhysicsContactDelegate {
     func _onScanningComplete() {
         self.scanningComplete = true
         //Add the scanned object to the realWorldObjectArray
-        self.realWorldObjectArray.insert(self.param_array, at: self.objectCount)
-        self.realWorldObjectEulerArray.insert( self.lastEulerAngleDetetedForObject , at: self.objectCount)
-        self.param_array.removeAll()
+        
+        self.realWorldObjectArray.insert(self.vertices, at: self.objectCount)
+        //self.realWorldObjectEulerArray.insert( self.lastEulerAngleDetetedForObject , at: self.objectCount)
+        self.vertices.removeAll()
     }
     
     func _onScanningStart() {
