@@ -228,29 +228,6 @@ class ViewController: UIViewController, SCNPhysicsContactDelegate {
                 y=0
                 z=0
                 
-//                if vertices.count>=6{
-//                    if check==0{
-//                        for i in 0...vertices.count-1{
-//                            indices.append(Int32(i))
-//                            x = x+vertices[i].x
-//                            y = y+vertices[i].y
-//                            z = z+vertices[i].z
-//                        }
-//                        let sphere3 = SCNNode(geometry: SCNSphere(radius: 0.03))
-//                        sphere3.geometry?.firstMaterial?.diffuse.contents = UIColor.blue
-//                        sphere3.position = SCNVector3(CGFloat(x/Float(vertices.count)),CGFloat(y/Float(vertices.count)),CGFloat(z/Float(vertices.count)))
-//                        self.sceneView.scene.rootNode.addChildNode(sphere3)
-//                        indices.insert(Int32(vertices.count), at: 0)
-//                        plot_polygon(vertices:vertices , indices: indices)
-//                        indices = []
-//
-//                    }
-//                    check=1
-//                    x=0
-//                    y=0
-//                    z=0
-//
-//                }
             }
             
             
@@ -525,44 +502,6 @@ class ViewController: UIViewController, SCNPhysicsContactDelegate {
         startgame.isHidden=true
         
     }
-//    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-//        guard let touch = touches.first else { return }
-//
-//        //If scanning is not on. Return from here
-//        if(self.isScanningComplete()){
-//            // TODO: Show a message to tell the user to press the start tapping option
-//            return
-//        }
-//
-//        let currentPoint = touch.location(in: sceneView)
-//        // Get all feature points in the current frame
-//
-//        let fp = self.sceneView.session.currentFrame?.rawFeaturePoints
-//        guard let count = fp?.points.count else{return}
-//        // Create a material
-//        let material = createMaterial()
-//        // Loop over them and check if any exist near our touch location
-//        // If a point exists in our range, let's draw a sphere at that feature point
-//        for index in 0..<count {
-//            let point = SCNVector3.init((fp?.points[index].x)!, (fp?.points[index].y)!, (fp?.points[index].z)!)
-//            let projection = self.sceneView.projectPoint(point)
-//            let xRange:ClosedRange<Float> = Float(currentPoint.x)-100.0...Float(currentPoint.x)+100.0
-//            let yRange:ClosedRange<Float> = Float(currentPoint.y)-100.0...Float(currentPoint.y)+100.0
-//            if (xRange ~= projection.x && yRange ~= projection.y) {
-//                let ballShape = SCNSphere(radius: 0.001)
-//                ballShape.materials = [material]
-//                let ballnode = SCNNode(geometry: ballShape)
-//                ballnode.position = point
-//                self.sceneView.scene.rootNode.addChildNode(ballnode)
-//                // We'll also save it for later use in our [SCNVector]
-//                //                let p_oints = CGPoint(x: CGFloat(point.x), y: CGFloat(point.y))
-//                //                points.append(p_oints)
-//                self.param_array.insert(vector_float3(point))
-//                self.lastEulerAngleDetetedForObject = self.getDyamicEulerAngles()
-//            }
-//        }
-//    }
-    
     func getDyamicEulerAngles() -> SCNVector3 {
         guard let pointOfView = self.sceneView.pointOfView else {return SCNVector3(0,0,0)}
         let transform = pointOfView.eulerAngles
@@ -592,21 +531,6 @@ class ViewController: UIViewController, SCNPhysicsContactDelegate {
         }
     }
     
-    //Used For Occlusion. NOt being used now
-    func placeInvisiblePlane(point: SCNVector3,width:Double, height:Double, z: Double, index: Int) {
-        let maskMaterial = SCNMaterial()
-        maskMaterial.diffuse.contents = UIColor.white
-        maskMaterial.colorBufferWriteMask = SCNColorMask(rawValue: 0)
-        maskMaterial.isDoubleSided = true
-        let wallNode = SCNNode(geometry: SCNPlane(width: CGFloat(width), height: CGFloat(height)))
-        //wallNode.geometry?.firstMaterial = maskMaterial
-        wallNode.geometry?.firstMaterial?.diffuse.contents = UIColor.red
-        //wallNode.renderingOrder = -1
-        wallNode.position = SCNVector3( point.x,point.y + 0.09,Float(z))
-        wallNode.eulerAngles = self.realWorldObjectEulerArray[index]
-        //wallNode.position = SCNVector3(0,0,0)
-        self.sceneView.scene.rootNode.addChildNode ( wallNode )
-    }
     
     func placeSphere( point: SCNVector3, width:Float, height: Float ) {
         let spehere = SCNNode(geometry: SCNSphere(radius: 0.05))
@@ -683,6 +607,7 @@ class ViewController: UIViewController, SCNPhysicsContactDelegate {
         
         let material = SCNMaterial()
         material.diffuse.contents = UIColor.purple.withAlphaComponent(0.75)
+        // Uncomment for clear plane
         //material.colorBufferWriteMask = []
         material.isDoubleSided = true
         geometry.firstMaterial = material
@@ -690,56 +615,19 @@ class ViewController: UIViewController, SCNPhysicsContactDelegate {
        // node.renderingOrder = -1
         self.sceneView.scene.rootNode.addChildNode(node)
     }
-    //We will Place the plane based on the Euler Angles. TC
+
+
     func placePlaneInFrontOfObjects(index: Int) {
-//        let objectBoundaries = self.realWorldObjectMaxBoundriesArray[index]
-//
-//        let height = self.getHeightBasedOnOrientation(objectBoundaries: objectBoundaries,eulerAngle: self.realWorldObjectEulerArray[index])
-//        // getter and setter
-//        let width = 2 * CGFloat(objectBoundaries.getMaxX())
-//        self.realWorldObjectMaxBoundriesArray[index].height = Float(height)
-//        self.realWorldObjectMaxBoundriesArray[index].width = Float(width)
-        //
-    
-//        let occlusionMaterial = SCNMaterial()
-//
-//        occlusionMaterial.colorBufferWriteMask = []
-        
-        
         for i in 0...self.realWorldObjectArray[index].count-1{
             self.indices.append(Int32(i))
             x = x+self.realWorldObjectArray[index][i].x
             y = y+self.realWorldObjectArray[index][i].y
             z = z+self.realWorldObjectArray[index][i].z
         }
-//        let sphere3 = SCNNode(geometry: SCNSphere(radius: 0.03))
-//        sphere3.geometry?.firstMaterial?.diffuse.contents = UIColor.blue
-//        sphere3.position = SCNVector3(CGFloat(x/Float(realWorldObjectArray[index].count)),CGFloat(y/Float(realWorldObjectArray[index].count)),CGFloat(z/Float(realWorldObjectArray[index].count)))
-//        self.sceneView.scene.rootNode.addChildNode(sphere3)
         self.indices.insert(Int32(realWorldObjectArray[index].count), at: 0)
         plot_polygon(vertices:realWorldObjectArray[index] , indices: self.indices)
         self.indices = []
         
-    
-        
-    
-        
-
-        
-        
-        /////
-//        let planeOfReference = SCNNode(geometry: SCNPlane(width: 2 * CGFloat(objectBoundaries.getMaxX()), height: 2 * height))
-//
-//        planeOfReference.geometry?.materials = [occlusionMaterial]
-//        planeOfReference.position = SCNVector3(self.realWorldObjectCentroidArray[index].x,self.realWorldObjectCentroidArray[index].y,self.realWorldObjectCentroidArray[index].z)
-//        planeOfReference.eulerAngles = self.realWorldObjectEulerArray[index]
-//        planeOfReference.renderingOrder = -1
-////        planeOfReference.geometry?.firstMaterial?.isDoubleSided = true
-//        self.sceneView.scene.rootNode.addChildNode(planeOfReference)
-//        let sphere = SCNNode(geometry: SCNSphere(radius: 0.03))
-//        sphere.geometry?.firstMaterial?.diffuse.contents = UIColor.green
-//        sphere.position = SCNVector3(self.realWorldObjectCentroidArray[index].x,self.realWorldObjectCentroidArray[index].y,self.realWorldObjectCentroidArray[index].z)
-//        self.sceneView.scene.rootNode.addChildNode(sphere)
     }
     
     func getHeightBasedOnOrientation(objectBoundaries: ObjectBoundaries, eulerAngle: SCNVector3) -> CGFloat {
