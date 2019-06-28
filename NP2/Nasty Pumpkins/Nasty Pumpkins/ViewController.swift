@@ -8,6 +8,8 @@
 
 import UIKit
 import ARKit
+import AVFoundation
+import AudioToolbox
 
 enum BitMaskCategory: Int {
     case rock = 2
@@ -20,6 +22,9 @@ class ViewController: UIViewController, SCNPhysicsContactDelegate {
     //Max and current sones/objects
     var currentStones: Float = 0.0
     var maxStones: Float = 15.0
+    
+    var audioPlayer = AVAudioPlayer()
+    
 //    var centroidList: [SCNVector3] = []
 //    var eulerList: [SCNVector3] = []
 //    var boundaryList: [ObjectBoundaries] = []
@@ -130,6 +135,14 @@ class ViewController: UIViewController, SCNPhysicsContactDelegate {
 //        circularProgress.tag = 101
 //        circularProgress.center = self.view.center
 //        self.view.addSubview(circularProgress)
+        
+        do {
+            audioPlayer = try AVAudioPlayer(contentsOf: URL.init(fileURLWithPath: Bundle.main.path(forResource: "ghostly", ofType: "mp3")!))
+            audioPlayer.prepareToPlay()
+        }
+        catch{
+            print("Sound File Not Found")
+        }
         
     }
     
@@ -346,6 +359,8 @@ class ViewController: UIViewController, SCNPhysicsContactDelegate {
             print (pumpkinNode.position)
             self.towardsPOVMovement(node: pumpkinNode)
         }
+        
+        audioPlayer.play()
     }
     
     func towardsPOVMovement(node: SCNNode) {
@@ -372,15 +387,17 @@ class ViewController: UIViewController, SCNPhysicsContactDelegate {
             while (true) {
                 if(SCNVector3EqualToVector3(node.position, location1)) {
                     print ("Running")
-                    let bokeh = SCNParticleSystem(named: "Media.scnassets/bokeh.scnp", inDirectory: nil)
-                    bokeh?.loops = false
-                    bokeh?.particleLifeSpan = 6
-                    bokeh?.emitterShape = node.geometry
-                    let bokehNode = SCNNode()
-                    bokehNode.addParticleSystem(bokeh!)
-                    bokehNode.position = location1
-                    self.sceneView.scene.rootNode.addChildNode(bokehNode)
+                    let bokeh2 = SCNParticleSystem(named: "Media.scnassets/bokeh2.scnp", inDirectory: nil)
+                    bokeh2?.loops = false
+                    bokeh2?.particleLifeSpan = 6
+                    bokeh2?.emitterShape = node.geometry
+                    let bokeh2Node = SCNNode()
+                    bokeh2Node.addParticleSystem(bokeh2!)
+                    bokeh2Node.position = location1
+                    self.sceneView.scene.rootNode.addChildNode(bokeh2Node)
                     node.runAction(SCNAction.removeFromParentNode())
+                    AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
+                    AudioServicesPlaySystemSound (SystemSoundID(1003))
                     
                     let plane_count = self.realWorldObjectCentroidArray.count
                     
@@ -428,12 +445,13 @@ class ViewController: UIViewController, SCNPhysicsContactDelegate {
             //Add animation = bokeh to pumkin being hit, then delte pumpkin child node
             let bokeh = SCNParticleSystem(named: "Media.scnassets/bokeh.scnp", inDirectory: nil)
             bokeh?.loops = false
-            bokeh?.particleLifeSpan = 6
+            bokeh?.particleLifeSpan = 3
             bokeh?.emitterShape = Target?.geometry
             let bokehNode = SCNNode()
             bokehNode.addParticleSystem(bokeh!)
             bokehNode.position = contact.contactPoint
             self.sceneView.scene.rootNode.addChildNode(bokehNode)
+            //AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
             Target?.removeFromParentNode()
             rock?.removeFromParentNode()
             
@@ -458,6 +476,7 @@ class ViewController: UIViewController, SCNPhysicsContactDelegate {
             
         }else{
             /////////////// game play is hidden
+            AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
             timeLeft.isHidden = true
             homeButton.isHidden = true
             view3d.isHidden  = true

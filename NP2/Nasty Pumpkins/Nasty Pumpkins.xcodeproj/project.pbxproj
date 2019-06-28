@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		04223E8822C5AC2B00B8E559 /* ghostly.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 04223E8722C5AC2B00B8E559 /* ghostly.mp3 */; };
 		04279A3322AE7B9C00CA48F0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04279A3222AE7B9C00CA48F0 /* AppDelegate.swift */; };
 		04279A3522AE7B9C00CA48F0 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04279A3422AE7B9C00CA48F0 /* ViewController.swift */; };
 		04279A3822AE7B9C00CA48F0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 04279A3622AE7B9C00CA48F0 /* Main.storyboard */; };
@@ -38,6 +39,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		04223E8722C5AC2B00B8E559 /* ghostly.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = ghostly.mp3; sourceTree = "<group>"; };
 		04279A2F22AE7B9C00CA48F0 /* Nasty Pumpkins.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Nasty Pumpkins.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		04279A3222AE7B9C00CA48F0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		04279A3422AE7B9C00CA48F0 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -82,6 +84,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		04223E8622C5AC1400B8E559 /* Music */ = {
+			isa = PBXGroup;
+			children = (
+				04223E8722C5AC2B00B8E559 /* ghostly.mp3 */,
+			);
+			path = Music;
+			sourceTree = "<group>";
+		};
 		04279A2622AE7B9C00CA48F0 = {
 			isa = PBXGroup;
 			children = (
@@ -110,6 +120,7 @@
 				04279A3622AE7B9C00CA48F0 /* Main.storyboard */,
 				0B29602122B33D2000375D31 /* ObjectBoundriesBean.swift */,
 				04279A3922AE7B9D00CA48F0 /* Assets.xcassets */,
+				04223E8622C5AC1400B8E559 /* Music */,
 				04279A3B22AE7B9D00CA48F0 /* LaunchScreen.storyboard */,
 				04279A3E22AE7B9D00CA48F0 /* Info.plist */,
 				04279A6222AE7FBB00CA48F0 /* Media.scnassets */,
@@ -242,6 +253,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				04279A3D22AE7B9D00CA48F0 /* LaunchScreen.storyboard in Resources */,
+				04223E8822C5AC2B00B8E559 /* ghostly.mp3 in Resources */,
 				04279A3A22AE7B9D00CA48F0 /* Assets.xcassets in Resources */,
 				04279A6322AE7FBB00CA48F0 /* Media.scnassets in Resources */,
 				04279A3822AE7B9C00CA48F0 /* Main.storyboard in Resources */,
@@ -449,13 +461,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = TKXA6G49B7;
+				DEVELOPMENT_TEAM = 637TH2TD7Z;
 				INFOPLIST_FILE = "Nasty Pumpkins/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.project.kushagra.counterapp;
+				PRODUCT_BUNDLE_IDENTIFIER = test.counterapp.com;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -467,13 +479,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = TKXA6G49B7;
+				DEVELOPMENT_TEAM = 637TH2TD7Z;
 				INFOPLIST_FILE = "Nasty Pumpkins/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.project.kushagra.counterapp;
+				PRODUCT_BUNDLE_IDENTIFIER = test.counterapp.com;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
