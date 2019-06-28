@@ -57,6 +57,7 @@ class ViewController: UIViewController, SCNPhysicsContactDelegate {
     var dist_z: [Float] = []
     var param_array = Set<vector_float3>()
     var realWorldObjectArray: [[SCNVector3]] = []
+    var realWorldPOVOrientation: [SCNVector3] = []
     var realWorldObjectCentroidArray: [SCNVector3] = []
     var realWorldObjectEulerArray: [SCNVector3] = []
     var realWorldObjectMaxBoundriesArray: [ObjectBoundaries] = []
@@ -263,6 +264,7 @@ class ViewController: UIViewController, SCNPhysicsContactDelegate {
         var x:Float = 0
         var y:Float = 0
         var z:Float = 0
+        
         //var eulerangles : SCNVector3
         //Objects are scanned  scanned now. Lets Store its 3D ARCloud Model
         for _ in self.realWorldObjectArray{
@@ -274,11 +276,17 @@ class ViewController: UIViewController, SCNPhysicsContactDelegate {
             x = self.realWorldObjectCentroidArray[index].x
             y = self.realWorldObjectCentroidArray[index].y
             z = self.realWorldObjectCentroidArray[index].z
+            
+            
+            
             let sphere3 = SCNNode(geometry: SCNSphere(radius: 0.03))
             sphere3.geometry?.firstMaterial?.diffuse.contents = UIColor.blue
-            sphere3.position = SCNVector3([x,y,z])
+            sphere3.position = SCNVector3(x,y,z)
+            
+            
             self.sceneView.scene.rootNode.addChildNode(sphere3)
             //eulerangles = self.realWorldObjectEulerArray[index]
+            
             ///----------------------------------------------------
 //            while(n<=5){
 //
@@ -295,9 +303,9 @@ class ViewController: UIViewController, SCNPhysicsContactDelegate {
 //                n += 1
 //            }
             
-            self.addPumpkin(x: x, y: y, z: z)
-            self.addPumpkin(x: x, y: y, z: z)
-            self.addPumpkin(x: x, y: y, z: z)
+            self.addPumpkin(x: x+self.realWorldPOVOrientation[index].x, y: y+self.realWorldPOVOrientation[index].y, z: z+self.realWorldPOVOrientation[index].z)
+            self.addPumpkin(x: x+self.realWorldPOVOrientation[index].x, y: y+self.realWorldPOVOrientation[index].y, z: z+self.realWorldPOVOrientation[index].z)
+            self.addPumpkin(x: x+self.realWorldPOVOrientation[index].x, y: y+self.realWorldPOVOrientation[index].y, z: z+self.realWorldPOVOrientation[index].z)
             
             index += 1
         }
@@ -341,7 +349,7 @@ class ViewController: UIViewController, SCNPhysicsContactDelegate {
         //Pumpkin is a 3D scnekit item
         let pumpkinScene = SCNScene(named: "Media.scnassets/Halloween_Pumpkin.scn")
         let pumpkinNode = (pumpkinScene?.rootNode.childNode(withName: "Halloween_Pumpkin", recursively: false))!
-        pumpkinNode.position = SCNVector3(x,y,z-Float.random(in: 2...4))
+        pumpkinNode.position = SCNVector3(x,y,z)//-Float.random(in: 2...4)
         
         let phy_body = SCNPhysicsBody(type: .static, shape: SCNPhysicsShape(node: pumpkinNode, options: nil))
         
@@ -552,6 +560,12 @@ class ViewController: UIViewController, SCNPhysicsContactDelegate {
             self.calculateCentroidForAllRealWorldObjects()
             print("All Centroids and Boundaries Calculated")
             print(self.realWorldObjectCentroidArray)
+            //pov orientataion
+            guard let pointOfView1 = self.sceneView.pointOfView else {return}
+            let transform = pointOfView1.transform
+            let orientation = SCNVector3(-transform.m31, -transform.m32, -transform.m33)
+            self.realWorldPOVOrientation.append(orientation)
+            
         }
         //Now proceed to show the object
         var count = 0;
