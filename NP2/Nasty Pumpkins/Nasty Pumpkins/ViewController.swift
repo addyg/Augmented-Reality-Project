@@ -265,7 +265,7 @@ class ViewController: UIViewController, SCNPhysicsContactDelegate {
         var y:Float = 0
         var z:Float = 0
         
-        //var eulerangles : SCNVector3
+        var eulerangles : SCNVector3
         //Objects are scanned  scanned now. Lets Store its 3D ARCloud Model
         for _ in self.realWorldObjectArray{
             /// Computed parameters of all the playing sufraces detected
@@ -285,7 +285,7 @@ class ViewController: UIViewController, SCNPhysicsContactDelegate {
             
             
             self.sceneView.scene.rootNode.addChildNode(sphere3)
-            //eulerangles = self.realWorldObjectEulerArray[index]
+            eulerangles = self.realWorldObjectEulerArray[index]
             
             ///----------------------------------------------------
 //            while(n<=5){
@@ -303,9 +303,9 @@ class ViewController: UIViewController, SCNPhysicsContactDelegate {
 //                n += 1
 //            }
             
-            self.addPumpkin(x: x+self.realWorldPOVOrientation[index].x, y: y+self.realWorldPOVOrientation[index].y, z: z+self.realWorldPOVOrientation[index].z)
-            self.addPumpkin(x: x+self.realWorldPOVOrientation[index].x, y: y+self.realWorldPOVOrientation[index].y, z: z+self.realWorldPOVOrientation[index].z)
-            self.addPumpkin(x: x+self.realWorldPOVOrientation[index].x, y: y+self.realWorldPOVOrientation[index].y, z: z+self.realWorldPOVOrientation[index].z)
+            self.addPumpkin(x: x+self.realWorldPOVOrientation[index].x, y: y+self.realWorldPOVOrientation[index].y, z: z+self.realWorldPOVOrientation[index].z,eulerangles:eulerangles)
+            self.addPumpkin(x: x+self.realWorldPOVOrientation[index].x, y: y+self.realWorldPOVOrientation[index].y, z: z+self.realWorldPOVOrientation[index].z,eulerangles:eulerangles)
+            self.addPumpkin(x: x+self.realWorldPOVOrientation[index].x, y: y+self.realWorldPOVOrientation[index].y, z: z+self.realWorldPOVOrientation[index].z,eulerangles:eulerangles)
             
             index += 1
         }
@@ -345,12 +345,12 @@ class ViewController: UIViewController, SCNPhysicsContactDelegate {
 //    }
     
     
-    func addPumpkin(x: Float, y: Float, z: Float) {
+    func addPumpkin(x: Float, y: Float, z: Float,eulerangles: SCNVector3) {
         //Pumpkin is a 3D scnekit item
         let pumpkinScene = SCNScene(named: "Media.scnassets/Halloween_Pumpkin.scn")
         let pumpkinNode = (pumpkinScene?.rootNode.childNode(withName: "Halloween_Pumpkin", recursively: false))!
         pumpkinNode.position = SCNVector3(x,y,z)//-Float.random(in: 2...4)
-        
+        pumpkinNode.eulerAngles = eulerangles
         let phy_body = SCNPhysicsBody(type: .static, shape: SCNPhysicsShape(node: pumpkinNode, options: nil))
         
         pumpkinNode.physicsBody = phy_body
@@ -410,8 +410,13 @@ class ViewController: UIViewController, SCNPhysicsContactDelegate {
                     let plane_count = self.realWorldObjectCentroidArray.count
                     
                     if (plane_count > 0) {
+                        
                         let index_val = Int.random(in: 0 ... plane_count-1)
-                        self.addPumpkin(x: self.realWorldObjectCentroidArray[index_val].x, y: self.realWorldObjectCentroidArray[index_val].y, z: self.realWorldObjectCentroidArray[index_val].z)
+                        let x = self.realWorldObjectCentroidArray[index_val].x
+                        let y = self.realWorldObjectCentroidArray[index_val].y
+                        let z = self.realWorldObjectCentroidArray[index_val].z
+                        let eulerangles = self.realWorldObjectEulerArray[index_val]
+                        self.addPumpkin(x: x+self.realWorldPOVOrientation[index_val].x, y: y+self.realWorldPOVOrientation[index_val].y, z: z+self.realWorldPOVOrientation[index_val].z,eulerangles:eulerangles)
                     }
                     break
                 }
@@ -462,13 +467,15 @@ class ViewController: UIViewController, SCNPhysicsContactDelegate {
             //AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
             Target?.removeFromParentNode()
             rock?.removeFromParentNode()
-            
             let plane_count = self.realWorldObjectCentroidArray.count
-            
-            // Add a new pumpkin everytime one gets shot
+                        // Add a new pumpkin everytime one gets shot
             if (plane_count > 0) {
                 let index_val = Int.random(in: 0 ... plane_count-1)
-                self.addPumpkin(x: self.realWorldObjectCentroidArray[index_val].x, y: self.realWorldObjectCentroidArray[index_val].y, z: self.realWorldObjectCentroidArray[index_val].z)
+                let eulerangles = self.realWorldObjectEulerArray[index_val]
+                x = self.realWorldObjectCentroidArray[index_val].x
+                y = self.realWorldObjectCentroidArray[index_val].y
+                z = self.realWorldObjectCentroidArray[index_val].z
+                self.addPumpkin(x: x+self.realWorldPOVOrientation[index_val].x, y: y+self.realWorldPOVOrientation[index_val].y, z: z+self.realWorldPOVOrientation[index_val].z,eulerangles:eulerangles)
             }
         }
         
@@ -704,7 +711,7 @@ class ViewController: UIViewController, SCNPhysicsContactDelegate {
         //Add the scanned object to the realWorldObjectArray
         
         self.realWorldObjectArray.insert(self.vertices, at: self.objectCount)
-        //self.realWorldObjectEulerArray.insert( self.lastEulerAngleDetetedForObject , at: self.objectCount)
+        self.realWorldObjectEulerArray.insert( self.getDyamicEulerAngles() , at: self.objectCount)
         self.vertices.removeAll()
     }
     
