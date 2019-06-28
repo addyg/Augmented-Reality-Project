@@ -328,7 +328,7 @@ class ViewController: UIViewController, SCNPhysicsContactDelegate {
         //Pumpkin is a 3D scnekit item
         let pumpkinScene = SCNScene(named: "Media.scnassets/Halloween_Pumpkin.scn")
         let pumpkinNode = (pumpkinScene?.rootNode.childNode(withName: "Halloween_Pumpkin", recursively: false))!
-        pumpkinNode.position = SCNVector3(x,y,z-Float.random(in: 20...40))
+        pumpkinNode.position = SCNVector3(x,y,z-Float.random(in: 2...4))
         
         let phy_body = SCNPhysicsBody(type: .static, shape: SCNPhysicsShape(node: pumpkinNode, options: nil))
         
@@ -342,42 +342,54 @@ class ViewController: UIViewController, SCNPhysicsContactDelegate {
         if number == 0 {
             self.twoDimensionalMovement(node: pumpkinNode)
         } else {
+            print("Initial Positiom")
+            print (pumpkinNode.position)
             self.towardsPOVMovement(node: pumpkinNode)
         }
     }
     
     func towardsPOVMovement(node: SCNNode) {
-        guard let pointOfView = self.sceneView.pointOfView else {return}
-        let transform = pointOfView.transform
-        //let orientation = SCNVector3(-transform.m31, -transform.m32, -transform.m33)
-        let location = SCNVector3(transform.m41, transform.m42, transform.m43)
+        guard let pointOfView1 = self.sceneView.pointOfView else {return}
+        let transform1 = pointOfView1.transform
+//        let orientation = SCNVector3(-transform.m31, -transform.m32, -transform.m33)
+        let location1 = SCNVector3(transform1.m41, transform1.m42, transform1.m43)
 //        let position = orientation + location
         
-        let hover = SCNAction.move(to: location, duration: 3)
+        let hover = SCNAction.move(to: location1, duration: 3)
         
+        print("Towards POV working")
         node.runAction(hover)
-        node.runAction(
-            SCNAction.sequence([SCNAction.wait(duration: 3.0),
-                                SCNAction.removeFromParentNode()])
-        )
+        
+//        node.runAction(
+//            SCNAction.sequence([SCNAction.wait(duration: 3.0),
+//                                SCNAction.removeFromParentNode()])
+//        )
 
-        // bokeh when pumpkin reaches POV
-        if(SCNVector3EqualToVector3(node.position, location)) {
-            let bokeh = SCNParticleSystem(named: "Media.scnassets/bokeh.scnp", inDirectory: nil)
-            bokeh?.loops = false
-            bokeh?.particleLifeSpan = 6
-            bokeh?.emitterShape = node.geometry
-            let bokehNode = SCNNode()
-            bokehNode.addParticleSystem(bokeh!)
-            bokehNode.position = location
-            self.sceneView.scene.rootNode.addChildNode(bokehNode)
-            node.runAction(SCNAction.removeFromParentNode())
-            
-            let plane_count = self.realWorldObjectCentroidArray.count
-            
-            if (plane_count > 0) {
-                let index_val = Int.random(in: 0 ... plane_count-1)
-                self.addPumpkin(x: self.realWorldObjectCentroidArray[index_val].x, y: self.realWorldObjectCentroidArray[index_val].y, z: self.realWorldObjectCentroidArray[index_val].z)
+        // bokeh when pumpkin reaches POV        
+        let dispatchQueue = DispatchQueue(label: "QueueIdentification", qos: .background)
+        dispatchQueue.async{
+            //Time consuming task here
+            while (true) {
+                if(SCNVector3EqualToVector3(node.position, location1)) {
+                    print ("Running")
+                    let bokeh = SCNParticleSystem(named: "Media.scnassets/bokeh.scnp", inDirectory: nil)
+                    bokeh?.loops = false
+                    bokeh?.particleLifeSpan = 6
+                    bokeh?.emitterShape = node.geometry
+                    let bokehNode = SCNNode()
+                    bokehNode.addParticleSystem(bokeh!)
+                    bokehNode.position = location1
+                    self.sceneView.scene.rootNode.addChildNode(bokehNode)
+                    node.runAction(SCNAction.removeFromParentNode())
+                    
+                    let plane_count = self.realWorldObjectCentroidArray.count
+                    
+                    if (plane_count > 0) {
+                        let index_val = Int.random(in: 0 ... plane_count-1)
+                        self.addPumpkin(x: self.realWorldObjectCentroidArray[index_val].x, y: self.realWorldObjectCentroidArray[index_val].y, z: self.realWorldObjectCentroidArray[index_val].z)
+                    }
+                    break
+                }
             }
         }
 
@@ -612,7 +624,7 @@ class ViewController: UIViewController, SCNPhysicsContactDelegate {
         material.isDoubleSided = true
         geometry.firstMaterial = material
         let node = SCNNode(geometry: geometry)
-       // node.renderingOrder = -1
+        node.renderingOrder = -1
         self.sceneView.scene.rootNode.addChildNode(node)
     }
 
