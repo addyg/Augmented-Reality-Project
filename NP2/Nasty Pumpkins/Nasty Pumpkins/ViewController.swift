@@ -284,7 +284,7 @@ class ViewController: UIViewController, SCNPhysicsContactDelegate {
             sphere3.position = SCNVector3(x,y,z)
             
             
-            self.sceneView.scene.rootNode.addChildNode(sphere3)
+            //self.sceneView.scene.rootNode.addChildNode(sphere3)
             eulerangles = self.realWorldObjectEulerArray[index]
             
             ///----------------------------------------------------
@@ -366,9 +366,10 @@ class ViewController: UIViewController, SCNPhysicsContactDelegate {
             print("Initial Positiom")
             print (pumpkinNode.position)
             self.towardsPOVMovement(node: pumpkinNode)
+            audioPlayer.play()
         }
         
-        audioPlayer.play()
+//        audioPlayer.play()
     }
     
     func towardsPOVMovement(node: SCNNode) {
@@ -427,8 +428,8 @@ class ViewController: UIViewController, SCNPhysicsContactDelegate {
     
     
     func twoDimensionalMovement(node: SCNNode) {
-        let hover_x = CGFloat.random(in: -5...5)
-        let hover_y = CGFloat.random(in: -5...5)
+        let hover_x = CGFloat.random(in: -3...3)
+        let hover_y = CGFloat.random(in: -3...3)
         let hoverUp = SCNAction.moveBy(x: hover_x, y: hover_y, z: 0, duration: 1)
         let hoverDown = SCNAction.moveBy(x: -(hover_x), y: -(hover_y), z: 0, duration: 1)
         let hoverSequence = SCNAction.sequence([hoverUp, hoverDown])
@@ -660,7 +661,7 @@ class ViewController: UIViewController, SCNPhysicsContactDelegate {
         let material = SCNMaterial()
         material.diffuse.contents = UIColor.purple.withAlphaComponent(0.75)
         // Uncomment for clear plane
-        //material.colorBufferWriteMask = []
+        material.colorBufferWriteMask = []
         material.isDoubleSided = true
         geometry.firstMaterial = material
         let node = SCNNode(geometry: geometry)
