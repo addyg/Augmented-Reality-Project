@@ -348,8 +348,8 @@ class ViewController: UIViewController, SCNPhysicsContactDelegate {
     
     func addPumpkin(x: Float, y: Float, z: Float,eulerangles: SCNVector3) {
         //Pumpkin is a 3D scnekit item
-        let pumpkinScene = SCNScene(named: "Media.scnassets/Halloween_Pumpkin.scn")
-        let pumpkinNode = (pumpkinScene?.rootNode.childNode(withName: "Halloween_Pumpkin", recursively: false))!
+        let pumpkinScene = SCNScene(named: "Media.scnassets/Sentinel_Swift_all.scn")
+        let pumpkinNode = (pumpkinScene?.rootNode.childNode(withName: "Sentinel", recursively: false))!
         pumpkinNode.position = SCNVector3(x,y,z)//-Float.random(in: 2...4)
         pumpkinNode.eulerAngles = eulerangles
         let phy_body = SCNPhysicsBody(type: .static, shape: SCNPhysicsShape(node: pumpkinNode, options: nil))
