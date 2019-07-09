@@ -1,0 +1,5 @@
+
+1). Double tap on the Project name in the Project Navigator. This will open the overall project settings page.
+2). In the General tab, Scroll towards the bottom and there will be Embedded Binaries sub heading in that. CLick on the '+' icon. A popup will open.
+3). There will be an 'Add Other' option at the bottom of the popup. Choose the ShapeDetection.framework file from that folder that you have downloaded it in. 
+4). Changes in your code - import ShapeDetection
