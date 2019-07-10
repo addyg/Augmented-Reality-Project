@@ -1,7 +1,8 @@
 # Augmented-Reality-Project
 Augmented Reality Project using Swift and Xcode. Includes an iOS Game App Dev.
 
-Temp name: Epochalypse
+Temp name: Nasty Pumpkins
+Team Members: Sunny Singh (SunnySingh00), Behram Buhariwala (bbuhariwala), Aditya Gupta (addyg), Kushagra Bhargava (EXPO, KushagraB)
 
 Goal: 
 Augmented Reality Game
