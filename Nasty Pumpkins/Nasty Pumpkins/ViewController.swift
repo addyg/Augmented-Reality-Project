@@ -2,7 +2,7 @@
 //  ViewController.swift
 //  Nasty Pumpkins
 //
-//  Created by Aditya Gupta on 2019-05-30.
+//  Created by Aditya Gupta on 6/10/19.
 //  Copyright © 2019 Aditya Gupta. All rights reserved.
 //
 
@@ -15,16 +15,58 @@ enum BitMaskCategory: Int {
 }
 
 class ViewController: UIViewController, SCNPhysicsContactDelegate {
-
-    @IBOutlet weak var sceneView: ARSCNView!
+    
+    
+    var currentTime: Float = 0.0
+    //Max game time default 30sec
+    var maxTime: Float = 30.0
+    
+    
+    //Max game time default 30sec
+    //var gameInt = 30
+    //Timer function to set game time limit
+    //var gameTimer = Timer()
+    
+    //Oreintation Button toggle
+    var buttonIsOn: Bool = false
+    
+    //toggle to turn on/off the timer
+    //var timerToggle: Bool = false
+    
+    //Time label to show time remianing
+    //@IBOutlet var timeLabel: UILabel!
+    
+    @IBOutlet var timeLeft: UIProgressView!
+    
+    //Button press to go back to main page
+    @IBAction func backButton(_ sender: Any) {
+         dismiss(animated: true, completion: nil)
+    }
+    
+    
+    //Button press to show 3D Orientation and feature points
+    @IBAction func orientation(_ sender: Any) {
+        if buttonIsOn{
+            self.sceneView.debugOptions = []
+            buttonIsOn = false
+        } else{
+            self.sceneView.debugOptions = [ARSCNDebugOptions.showWorldOrigin, ARSCNDebugOptions.showFeaturePoints]
+            buttonIsOn = true
+        }
+    }
+    
+    
+    //Add sceneView
+    @IBOutlet var sceneView: ARSCNView!
     let configuration = ARWorldTrackingConfiguration()
     //Variable power to add impulse to stone throws
     var power: Float = 50
     var Target: SCNNode?
+    
+    
+    //Standard function
     override func viewDidLoad() {
         super.viewDidLoad()
-        //Standard options, to be added to all games
-        self.sceneView.debugOptions = [ARSCNDebugOptions.showWorldOrigin, ARSCNDebugOptions.showFeaturePoints]
         self.sceneView.session.run(configuration)
         self.sceneView.autoenablesDefaultLighting = true
         
@@ -33,6 +75,9 @@ class ViewController: UIViewController, SCNPhysicsContactDelegate {
         self.sceneView.addGestureRecognizer(gestureRecognizer)
         self.sceneView.scene.physicsWorld.contactDelegate = self
         
+        //To show 30sec in the timer label and homepage
+        //gameInt = 30
+        //timeLabel.text = " "+String(gameInt)+"    "
     }
     //Standard
     override func didReceiveMemoryWarning() {
@@ -66,21 +111,53 @@ class ViewController: UIViewController, SCNPhysicsContactDelegate {
         rock.physicsBody?.categoryBitMask = BitMaskCategory.rock.rawValue
         rock.physicsBody?.contactTestBitMask = BitMaskCategory.target.rawValue
         self.sceneView.scene.rootNode.addChildNode(rock)
-        //rock.runAction(
-            //SCNAction.sequence([SCNAction.wait(duration: 2.0),
-                                //SCNAction.removeFromParentNode()])
-        //)
-    }
-    
-    //Make 5 pumpkins at different distances
-    @IBAction func addTargets(_ sender: Any) {
-        self.addPumpkin(x: 8, y: 0, z: -20)
-        self.addPumpkin(x: 0, y: 0, z: -70)
-        self.addPumpkin(x: 6, y: 10, z: -100)
-        self.addPumpkin(x: -2, y: 13, z: -135)
-        self.addPumpkin(x: -6, y: -5, z: -40)
+        
         
     }
+    
+    
+    //Button to make 5 pumpkins at different (or random) distances
+    @IBAction func addTargets(_ sender: UIButton) {
+        
+        sender.isHidden = true
+        
+        var n:Int = 0
+        
+        while(n<=5){
+            
+            let randX = Float.random(in: -10...10)
+            let randY = Float.random(in: -10...10)
+            let randZ = Float.random(in: 20...150)
+            
+            self.addPumpkin(x: randX, y: randY, z: -randZ)
+            
+            n += 1
+        }
+        
+        self.addWall(x: 0, y: 0, z: -2)
+        
+        //Starting timer
+        //gameTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(ViewController.game), userInfo: nil, repeats: true)
+        
+        timeLeft.setProgress(currentTime, animated: true)
+        perform(#selector(updateProgress), with: nil, afterDelay: 1.0 )
+        
+    }
+    
+    
+    func addWall(x: Float, y: Float, z: Float) {
+        
+        let wall = SCNNode(geometry: SCNBox(width: 0.2, height: 0.2, length: 0.2, chamferRadius: 0.05))
+        wall.geometry?.firstMaterial?.diffuse.contents = UIColor.red
+        wall.position = SCNVector3(x,y,z)
+        
+        let wallBody = SCNPhysicsBody(type: .static, shape: SCNPhysicsShape(node: wall, options: nil))
+        wall.physicsBody = wallBody
+        
+        self.sceneView.scene.rootNode.addChildNode(wall)
+        
+    }
+    
     
     func addPumpkin(x: Float, y: Float, z: Float) {
         //Pumpkin is a 3D scnekit item
@@ -91,6 +168,8 @@ class ViewController: UIViewController, SCNPhysicsContactDelegate {
         pumpkinNode.physicsBody?.categoryBitMask = BitMaskCategory.target.rawValue
         pumpkinNode.physicsBody?.contactTestBitMask = BitMaskCategory.rock.rawValue
         self.sceneView.scene.rootNode.addChildNode(pumpkinNode)
+        
+        
     }
     func physicsWorld(_ world: SCNPhysicsWorld, didBegin contact: SCNPhysicsContact) {
         let nodeA = contact.nodeA
@@ -113,8 +192,44 @@ class ViewController: UIViewController, SCNPhysicsContactDelegate {
         Target?.removeFromParentNode()
         
     }
+    
+    /*
+     //Function for timer in the game
+     @objc func game(){
+     
+     
+     if gameInt <= 0{
+     gameTimer.invalidate()
+     return
+     }else{
+     gameInt -= 1
+     timeLabel.text = " "+String(gameInt)+"    "
+     }
+     
+     }
+     */
+    
+
+    //Function for timer progress bar in the game
+    @objc func updateProgress(){
+        
+        currentTime = currentTime + 1.0
+        timeLeft.progress = currentTime/maxTime
+        
+        if currentTime < maxTime{
+            perform(#selector(updateProgress), with: nil, afterDelay: 1.0 )
+        }else{
+            currentTime = 0.0
+            
+            return
+        }
+    }
+    
+    
 }
 
+//Function to define "+" sign to add POV and Orentation = Location
 func +(left: SCNVector3, right: SCNVector3) -> SCNVector3 {
     return SCNVector3Make(left.x + right.x, left.y + right.y, left.z + right.z)
 }
+
